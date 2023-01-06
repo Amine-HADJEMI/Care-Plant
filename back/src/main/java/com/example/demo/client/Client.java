@@ -3,14 +3,11 @@ package com.example.demo.client;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 //import javax.persistence.*;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 import java.time.LocalDate;
 
-@EntityScan
-//@Table
+@Entity
+@Table
 public class Client {
 
     @Id
