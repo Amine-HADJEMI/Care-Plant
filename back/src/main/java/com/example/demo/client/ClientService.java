@@ -12,13 +12,19 @@ import com.example.demo.client.Client;
 
 @Service
 public class ClientService {
-    public List<Client> getStudents() {
+    public List<Client> getClients() {
         return List.of(
                 new Client(
                         1,
                         "med.fath9@gmail.com",
                         "fathallah",
                         "picutre 1"
+                )
+                ,new Client(
+                        2,
+                        "amine@gmail.com",
+                        "mohamed",
+                        "picutre 3"
                 )
         );
     }

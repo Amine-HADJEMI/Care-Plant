@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("books")
+@RequestMapping(path = "api/v1/client")
 public class ClientController {
 
     private  final ClientService clientService;
@@ -20,7 +20,7 @@ public class ClientController {
     }
 
     @GetMapping
-    public List<Client> getStudents() {
-        return clientService.getStudents();
+    public List<Client> getClients() {
+        return clientService.getClients();
     }
 }
