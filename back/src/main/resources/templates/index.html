@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+</head>
+<body>
+<div class="container">
+
+    <div th:if="$(not #lists.isEmpty(teams))">
+
+        <h2> Clients List </h2>
+
+        <table class = "table table-striped">
+            <tr>
+                <th> Clients </th>
+            </tr>
+            <tr th:each="team : ${teams}">
+                <td th:text="${team.teamName}"></td>
+            </tr>
+
+        </table>
+    </div>
+</div>
+</body>
+</html>
