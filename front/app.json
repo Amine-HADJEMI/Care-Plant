@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "CarePlant",
+    "slug": "CarePlant",
+    "version": "1.0.0",
+    "permissions": [
+      "camera",
+      "photoLibrary"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "CarePlant"
+}
