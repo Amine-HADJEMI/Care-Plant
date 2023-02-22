@@ -11,7 +11,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://localhost:3000/'
 
-export default class SignUp extends React.Component {
+export default class ForgetPassword extends React.Component {
   state = {
     username: '', name: '', password: '', email: ''
   }
@@ -53,20 +53,6 @@ export default class SignUp extends React.Component {
       <View style={styles.container}>
         <TextInput
           style={styles.input}
-          placeholder='Username'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('username', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Name'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('name', val)}
-        />
-        <TextInput
-          style={styles.input}
           placeholder='Email'
           autoCapitalize="none"
           placeholderTextColor='white'
@@ -74,20 +60,35 @@ export default class SignUp extends React.Component {
         />
         <TextInput
           style={styles.input}
-          placeholder='Password'
+          placeholder='Actual Password'
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('password', val)}
         />
-
+        <TextInput
+          style={styles.input}
+          placeholder='New Password'
+          secureTextEntry={true}
+          autoCapitalize="none"
+          placeholderTextColor='white'
+          onChangeText={val => this.onChangeText('password', val)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Confirm New Password'
+          secureTextEntry={true}
+          autoCapitalize="none"
+          placeholderTextColor='white'
+          onChangeText={val => this.onChangeText('password', val)}
+        />
         <TouchableOpacity style={styles.signUpBtn} 
           // onPress={() =>
           //   navigation.navigate('Home')
           // }
           onPress= {() => this.putData()}
           > 
-          <Text style={styles.loginText} >Sign Up</Text> 
+          <Text style={styles.loginText} >Confirm</Text> 
         </TouchableOpacity>
       </View>
     )
@@ -104,9 +105,9 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 14,
     fontSize: 18,
-    // fontWeight: '500',
+    fontWeight: '500',
     width: "80%",
-    // maxWidth: "500px",
+    maxWidth: "500px",
   },
   container: {
     flex: 1,

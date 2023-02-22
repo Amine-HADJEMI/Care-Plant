@@ -87,7 +87,7 @@ export default function Login({navigation}) {
       
       <TouchableOpacity style={styles.mdpBtn}
           onPress={() =>
-            navigation.navigate('')
+            navigation.navigate('ForgetPassword')
           }> 
           <Text style={styles.loginText}>Mot de passe oublié</Text> 
       </TouchableOpacity>
@@ -134,9 +134,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
     maxWidth: 400,
-    
   },
   TextInput: {
+    borderRadius: 30,
     height: 50,
     flex: 1,
     padding: 5,
