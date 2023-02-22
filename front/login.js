@@ -1,17 +1,45 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 
-
 export default function Login({navigation}) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const loginSuccess = (email, password) => {
+    const data = [
+      {
+        email: "toto@epsi.fr",
+        password: "1234"
+      },
+      {
+        email: "titi@epsi.fr",
+        password: "0000"
+      }, 
+      {
+        email: "test@epsi.fr",
+        password: "5555"
+      }
+    ]
+  
+    // const requestLogin = axios.post('/login', data);
+    const element = { email, password }
+    const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
+    if (isInData) {
+      navigation.navigate('Home')
+      console.log("element exist in the database");
+    } else {
+      console.log("element is not existing in the database");
+
+      window.alert('INVALID PASSWORD OR EMAIL');
+    }
+  }
+
   return (
 
     <View style={styles.container}>
 
-    <h1>Careplant</h1>
+    <Text>Careplant</Text>
 
     <Image source={require('./assets/logo.jpg')} style={styles.logo} />
     
@@ -42,7 +70,7 @@ export default function Login({navigation}) {
           <Text style={styles.loginText}>Mot de passe oublié</Text> 
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginBtn} onPress={pressConnexion}> 
+      <TouchableOpacity style={styles.loginBtn} onPress={ () => loginSuccess(email, password) }> 
         <Text style={styles.loginText}>Connexion</Text> 
       </TouchableOpacity> 
       
@@ -57,40 +85,6 @@ export default function Login({navigation}) {
   );
 }
 
-pressConnexion = () => {
-  const data = () =>{
-    const don1 = {
-      email: "a@",
-      password: "ap"
-    };
-    const don2 = {
-      email: "b@",
-      password: "bp"
-    };
-    const don3 = {
-      email: "c@",
-      password: "cp"
-    };
-  }
-
-  const element = axios.post('/users', data);
-
-  if (element === data.don1 || element === data.don2 || element === data.don3) {
-    Request = 200;
-    navigation.navigate('Home')
-    console.log("element exist in the database");
-  } else {
-    console.log("element is not existing in the database");
-  }
-}
-  
-// const pressConnexion = (putData) => {
-//   if (Request == 200){
-//     Request = 200;
-//   }else {
-//     console.log("password false");
-//   }
-// }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
