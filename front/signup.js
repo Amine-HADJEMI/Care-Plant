@@ -103,9 +103,9 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 14,
     fontSize: 18,
-    fontWeight: '500',
+    // fontWeight: '500',
     width: "80%",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   },
   container: {
     flex: 1,
@@ -120,6 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   }
 })

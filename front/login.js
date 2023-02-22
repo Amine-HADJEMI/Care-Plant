@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import axios from 'axios'
 
 export default function Login({navigation}) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  axios.defaults.baseURL = 'http://localhost:3000/'
 
   const loginSuccess = (email, password) => {
     const data = [
@@ -22,17 +25,30 @@ export default function Login({navigation}) {
       }
     ]
   
-    // const requestLogin = axios.post('/login', data);
-    const element = { email, password }
-    const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
-    if (isInData) {
+    axios.post('/login', {email, password})
+    .then(response => {
       navigation.navigate('Home')
-      console.log("element exist in the database");
-    } else {
-      console.log("element is not existing in the database");
 
-      window.alert('INVALID PASSWORD OR EMAIL');
-    }
+    // Le code de statut HTTP est 200, l'authentification a réussi
+      console.log(response.data);
+    })
+    .catch(error => {
+    // Le code de statut HTTP n'est pas 200, l'authentification a échoué
+    console.log(error.response.data.message);
+    });
+
+    // const requestLogin = axios.post('/login', {email, password});
+    // console.log('requestLogin',requestLogin)
+    // const element = { email, password }
+    // const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
+    // if (isInData) {
+    //   navigation.navigate('Home')
+    //   console.log("element exist in the database");
+    // } else {
+    //   console.log("element is not existing in the database");
+
+    //   // window.alert('INVALID PASSWORD OR EMAIL');
+    // }
   }
 
   return (
@@ -143,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   },
   loginText: {
     fontSize: "larger",
