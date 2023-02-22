@@ -42,9 +42,7 @@ export default function Login({navigation}) {
           <Text style={styles.loginText}>Mot de passe oublié</Text> 
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.loginBtn} onPress={() =>
-            navigation.navigate('Home')
-          }> 
+      <TouchableOpacity style={styles.loginBtn} onPress={pressConnexion}> 
         <Text style={styles.loginText}>Connexion</Text> 
       </TouchableOpacity> 
       
@@ -58,6 +56,41 @@ export default function Login({navigation}) {
     </View> 
   );
 }
+
+pressConnexion = () => {
+  const data = () =>{
+    const don1 = {
+      email: "a@",
+      password: "ap"
+    };
+    const don2 = {
+      email: "b@",
+      password: "bp"
+    };
+    const don3 = {
+      email: "c@",
+      password: "cp"
+    };
+  }
+
+  const element = axios.post('/users', data);
+
+  if (element === data.don1 || element === data.don2 || element === data.don3) {
+    Request = 200;
+    navigation.navigate('Home')
+    console.log("element exist in the database");
+  } else {
+    console.log("element is not existing in the database");
+  }
+}
+  
+// const pressConnexion = (putData) => {
+//   if (Request == 200){
+//     Request = 200;
+//   }else {
+//     console.log("password false");
+//   }
+// }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
