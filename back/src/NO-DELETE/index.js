@@ -5,12 +5,13 @@ const bcrypt = require('bcrypt');
 const cors = require("cors");
 
 const app = express();
-const port = 3000;
+const port = 3002;
 
 // Configure body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+
 // Initialize SQLite database
 const db = new sqlite3.Database("database.db", (err) => {
   if (err) {
@@ -69,6 +70,7 @@ app.delete('/users/:userName', (req, res) => {
     res.status(200).send(`User with userName ${req.params.userName} deleted`);
   });
 });
+
 // PUT request to modif a user from the database
 app.put('/users/:userName', (req, res) => {
   const { name, email, password } = req.body;
