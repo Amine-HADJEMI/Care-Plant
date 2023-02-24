@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
-import axios from 'axios'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Ionicons, Platform } from "react-native";
+// import { Ionicons } from '@expo/vector-icons';
 
 export default function Login({navigation}) {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [colorTest, setColorTest] = useState("blue")
+
+  const ifMobile = () => {
+    if(Platform.OS === 'ios'){
+      setColorTest('yellow')
+    } else {
+      setColorTest('red')
+    }
+  }
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -61,9 +70,7 @@ export default function Login({navigation}) {
 
     <View style={styles.container}>
 
-    <Text>Careplant</Text>
-
-    <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+    <Image source={require('./data/images/arosa-je.png')} style={styles.logo} />
     
 
       <View style={styles.inputView}>
@@ -83,7 +90,11 @@ export default function Login({navigation}) {
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         /> 
+        
       </View>
+      {/* <TouchableOpacity>
+        <Ionicons name="eye"  size={24} color="#003f5c" />
+      </TouchableOpacity> */}
       
       <TouchableOpacity style={styles.mdpBtn}
           onPress={() =>
@@ -118,13 +129,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    width: 260,
+    height: 130,
+    marginBottom: 70,
   },
   image: {
     marginBottom: 40,
-    maxWidth: "50%",
+    maxWidth: "100%",
+    // height: 4000,
+    // width: 445
   },
   inputView: {
     backgroundColor: "#A1E79F",
