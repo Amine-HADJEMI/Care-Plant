@@ -7,6 +7,9 @@ export default function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [errorMessage, setErrorMessage] = useState(null);
+
+
   axios.defaults.baseURL = 'http://localhost:3000/'
 
   const loginSuccess = (email, password) => {
@@ -37,18 +40,21 @@ export default function Login({navigation}) {
     console.log(error.response.data.message);
     });
 
-    // const requestLogin = axios.post('/login', {email, password});
-    // console.log('requestLogin',requestLogin)
-    // const element = { email, password }
-    // const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
-    // if (isInData) {
-    //   navigation.navigate('Home')
-    //   console.log("element exist in the database");
-    // } else {
-    //   console.log("element is not existing in the database");
+    // Avoir aprés modification du back-------------------------------------------------------------------
+     const requestLogin = axios.post('/login', {email, password});
+     console.log('requestLogin',requestLogin)
+     const element = { email, password }
+     const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
+     if (isInData) {
+       navigation.navigate('Home')
+       console.log("element exist in the database");
+     } else {
+       console.log("element is not existing in the database");
 
-    //   // window.alert('INVALID PASSWORD OR EMAIL');
-    // }
+       // window.alert('INVALID PASSWORD OR EMAIL');
+       setErrorMessage('Email ou mot de passe incorrect');
+     }
+     //----------------------------------------------------------------------------------------------------
   }
 
   return (
@@ -87,8 +93,11 @@ export default function Login({navigation}) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.loginBtn} onPress={ () => loginSuccess(email, password) }> 
-        <Text style={styles.loginText}>Connexion</Text> 
+        <Text style={styles.loginText}>Connexion</Text>
       </TouchableOpacity> 
+
+      {/* Afficher le message d'erreur si nécessaire */}
+      {errorMessage && <p style={styles.errorStyle}>{errorMessage}</p>} 
       
       <TouchableOpacity style={styles.signUpBtn}
           onPress={() =>
@@ -164,5 +173,8 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: "larger",
     fontWeight: "bold",
+  },
+  errorStyle: {
+    color: "red",
   }
 });
