@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
-
+import axios from "axios";
 
 export default function Login({navigation}) {
 
@@ -13,26 +13,24 @@ export default function Login({navigation}) {
   axios.defaults.baseURL = 'http://localhost:3000/'
 
   const loginSuccess = (email, password) => {
-    const data = [
-      {
-        email: "toto@epsi.fr",
-        password: "1234"
-      },
-      {
-        email: "titi@epsi.fr",
-        password: "0000"
-      }, 
-      {
-        email: "test@epsi.fr",
-        password: "5555"
-      }
-    ]
+    // const data = [
+    //   {
+    //     email: "toto@epsi.fr",
+    //     password: "1234"
+    //   },
+    //   {
+    //     email: "titi@epsi.fr",
+    //     password: "0000"
+    //   }, 
+    //   {
+    //     email: "test@epsi.fr",
+    //     password: "5555"
+    //   }
+    // ]
   
     axios.post('/login', {email, password})
     .then(response => {
       navigation.navigate('Home')
-
-    // Le code de statut HTTP est 200, l'authentification a réussi
       console.log(response.data);
     })
     .catch(error => {
@@ -45,6 +43,7 @@ export default function Login({navigation}) {
      console.log('requestLogin',requestLogin)
      const element = { email, password }
      const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
+     
      if (isInData) {
        navigation.navigate('Home')
        console.log("element exist in the database");
