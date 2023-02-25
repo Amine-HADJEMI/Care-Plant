@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const Database = require("../models/database");
-const sqlite3 = require("sqlite3");
 
 const db = Database.db
 
