@@ -4,6 +4,7 @@ const Database = require("../models/database");
 const db = Database.db
 
 async function getAllUsers(req, res) {
+  console.log('tessst get')
   try {
     const rows = await new Promise((resolve, reject) => {
       db.all('SELECT * FROM users', (err, rows) => {
@@ -42,7 +43,7 @@ async function createUser(req, res) {
       });
 
       if (existingUsers.length > 0) {
-        res.status(400).send('User already exists');
+        res.status(201).send('User already exists');
       }
       else {
         const stmt = db.prepare(
@@ -58,7 +59,7 @@ async function createUser(req, res) {
         res.status(201).send('User created successfully');
       }
     } else {
-      res.status(400).send('Please complete the data');
+      res.status(201).send('Please complete the data');
     }
   } catch (error) {
     console.error(error);

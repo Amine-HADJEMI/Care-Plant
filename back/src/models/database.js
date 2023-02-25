@@ -28,6 +28,14 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS plants (
     description TEXT NOT NULL
 )`);
 
+Database.db.run(`
+  CREATE TABLE IF NOT EXISTS images (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    data BLOB
+  )
+`);
+
 // Create photos table
 Database.db.run(`CREATE TABLE IF NOT EXISTS photos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

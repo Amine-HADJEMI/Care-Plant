@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+import axios from 'axios';
 
 export default function CameraApp() {
   let cameraRef = useRef();
@@ -38,17 +39,47 @@ export default function CameraApp() {
   };
 
   if (photo) {
-    let sharePic = () => {
-      shareAsync(photo.uri).then(() => {
-        setPhoto(undefined);
-      });
-    };
+    // let sharePic = () => {
+    //   shareAsync(photo.uri).then(() => {
+    //     setPhoto(undefined);
+    //   });
+    // };
 
-    let savePhoto = () => {
-      MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
-        setPhoto(undefined);
+    // let savePhoto = () => {
+    //   MediaLibrary.saveToLibraryAsync(photo.uri).then(() => {
+    //     setPhoto(undefined);
+    //   });
+    // };
+
+    // import axios from 'axios';
+    
+    let sharePic = () => {
+      MediaLibrary.saveToLibraryAsync(photo.uri).then(async asset => {
+        const fileUri = asset.uri;
+        const fileBase64 = await FileSystem.readAsStringAsync(fileUri, { encoding: 'base64' });
+        const formData = new FormData();
+        formData.append('photo', {
+          uri: fileUri,
+          name: 'photo.jpg',
+          type: 'image/jpeg',
+          data: fileBase64,
+        });
+        axios.post('https://59d1-2001-861-3506-320-b161-ec8e-afb6-9eb7.eu.ngrok.io/photo', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }).then(() => {
+          setPhoto(undefined);
+        }).catch(error => {
+          console.error(error);
+        });
+      }).catch(error => {
+        console.error(error);
       });
     };
+    
+    
+
 
     return (
       <SafeAreaView style={styles.container}>

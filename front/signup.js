@@ -9,7 +9,7 @@ import {
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = 'https://89fb-2001-861-3506-320-b161-ec8e-afb6-9eb7.eu.ngrok.io'
 
 export default class SignUp extends React.Component {
   state = {
@@ -30,7 +30,7 @@ export default class SignUp extends React.Component {
  
   putData = () => {
     const donnnn = {
-      username : this.state.username,      
+      userName : this.state.username,      
       name: this.state.name,
       email: this.state.email,
       password: this.state.password
@@ -103,9 +103,9 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 14,
     fontSize: 18,
-    fontWeight: '500',
+    // fontWeight: '500',
     width: "80%",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   },
   container: {
     flex: 1,
@@ -120,6 +120,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   }
 })

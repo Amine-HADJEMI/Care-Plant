@@ -11,11 +11,10 @@ export default function Login({navigation}) {
 
     <View style={styles.container}>
 
-    <h1>Careplant</h1>
+    <Text>Careplant</Text>
 
     <Image source={require('./assets/logo.jpg')} style={styles.logo} />
     
-
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
@@ -116,7 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    // maxWidth: "500px",
   },
   loginText: {
     fontSize: "larger",
