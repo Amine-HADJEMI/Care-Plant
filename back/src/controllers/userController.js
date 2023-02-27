@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const Database = require("../models/database");
-const sqlite3 = require("sqlite3");
 
 const db = Database.db
 
@@ -23,12 +22,10 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res) {
   try {
-    // Hash the password
     const password = req.body.password;
     const saltRounds = 10;
     const hash = await bcrypt.hash(password, saltRounds);
 
-    // Insert the new user into the database
     if (req.body.userName && req.body.email) {
       const existingUsers = await new Promise((resolve, reject) => {
         db.all(
@@ -43,7 +40,7 @@ async function createUser(req, res) {
       });
 
       if (existingUsers.length > 0) {
-        res.status(400).send('User already exists');
+        res.status(200).send('User already exists');
       }
       else {
         const stmt = db.prepare(
@@ -59,7 +56,7 @@ async function createUser(req, res) {
         res.status(201).send('User created successfully');
       }
     } else {
-      res.status(400).send('Please complete the data');
+      res.status(200).send('Please complete the data');
     }
   } catch (error) {
     console.error(error);
