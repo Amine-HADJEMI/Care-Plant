@@ -1,12 +1,12 @@
 const bcrypt = require("bcrypt");
 const Database = require("../models/database");
 
-const db = Database.db
+const db = Database.db;
 
 async function getAllUsers(req, res) {
   try {
     const rows = await new Promise((resolve, reject) => {
-      db.all('SELECT * FROM users', (err, rows) => {
+      db.all("SELECT * FROM users", (err, rows) => {
         if (err) {
           reject(err);
         }
@@ -29,38 +29,33 @@ async function createUser(req, res) {
     if (req.body.userName && req.body.email) {
       const existingUsers = await new Promise((resolve, reject) => {
         db.all(
-          'SELECT * FROM users WHERE userName = ? OR email = ?',
-          [req.body.userName, req.body.email], 
+          "SELECT * FROM users WHERE userName = ? OR email = ?",
+          [req.body.userName, req.body.email],
           (err, rows) => {
-          if (err) {
-            reject(err);
+            if (err) {
+              reject(err);
+            }
+            resolve(rows);
           }
-          resolve(rows);
-        });
+        );
       });
 
       if (existingUsers.length > 0) {
-        res.status(200).send('User already exists');
-      }
-      else {
+        res.status(200).send("User already exists");
+      } else {
         const stmt = db.prepare(
-          'INSERT INTO users (userName, name, email, password) VALUES (?, ?, ?, ?)'
+          "INSERT INTO users (userName, name, email, password) VALUES (?, ?, ?, ?)"
         );
-        stmt.run(
-          req.body.userName,
-          req.body.name,
-          req.body.email,
-          hash
-        );
+        stmt.run(req.body.userName, req.body.name, req.body.email, hash);
         stmt.finalize();
-        res.status(201).send('User created successfully');
+        res.status(201).send("User created successfully");
       }
     } else {
-      res.status(200).send('Please complete the data');
+      res.status(200).send("Please complete the data");
     }
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error creating user');
+    res.status(500).send("Error creating user");
   }
 }
 
@@ -77,38 +72,48 @@ async function updateUser(req, res) {
       res.json({ message: "User updated successfully" });
     }
   );
-};
+}
 
-async function deleteUser(req, res) {  
+async function deleteUser(req, res) {
   try {
     const existingUser = await new Promise((resolve, reject) => {
       db.all(
-        'SELECT * FROM users WHERE userName = ?', 
-        req.params.userName, (err, rows) => {
-        if (err) {
-          reject(err);
+        "SELECT * FROM users WHERE userName = ?",
+        req.params.userName,
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(rows);
         }
-        resolve(rows);
-      });
+      );
     });
 
     if (existingUser.length === 0) {
-      return res.status(404).send(`The user with userName ${req.params.userName} does not exist`);
+      return res
+        .status(404)
+        .send(`The user with userName ${req.params.userName} does not exist`);
     }
 
-    db.run(`DELETE FROM users WHERE userName = ?`, req.params.userName, function(err) {
-      if (err) {
-        return res.status(500).send(err);
-      }
-      console.log('existingUser.length')
+    db.run(
+      `DELETE FROM users WHERE userName = ?`,
+      req.params.userName,
+      function (err) {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        console.log("existingUser.length");
 
-      res.status(200).send(`User with userName ${req.params.userName} deleted`);
-    });
+        res
+          .status(200)
+          .send(`User with userName ${req.params.userName} deleted`);
+      }
+    );
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error deleting user');
+    res.status(500).send("Error deleting user");
   }
-};
+}
 
 module.exports = {
   getAllUsers,
