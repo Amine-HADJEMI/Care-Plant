@@ -15,23 +15,52 @@ export default function Home({navigation}) {
     });
     if (!result.cancelled) {
       setSelectedImage({ uri: result.uri });
+      saveImage(result.uri);
+    }
+  };
+
+  const saveImage = async (uri) => {
+    try {
+      const response = await fetch('http://your-api-url.com/savePhoto', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uri: uri
+        })
+      });
+
+      const data = await response.json();
+
+      // Update the selectedImage state with the URL of the saved image
+      setSelectedImage({ uri: data.url });
+
+    } catch (error) {
+      console.error(error);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Image source={require('./assets/logo.jpg')} style={styles.logo} />
-      <Text style={styles.welcome}>CarePlant</Text>
-      <TouchableOpacity style={styles.button} onPress={selectImage}>
-        <Text style={styles.buttonText}>Selectionner une image</Text>
-      </TouchableOpacity>
-      <IconButton
-        icon="camera"
-        iconColor={MD3Colors.neutral0}
-        containerColor="#EEEEEE"
-        size={100}
-        onPress={() => navigation.navigate('CameraApp')}
-      />
+      {selectedImage && <Image source={{ uri: selectedImage.uri }} style={styles.image} />}
+      {!selectedImage && (
+        <>
+          <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+          <Text style={styles.welcome}>CarePlant</Text>
+          <TouchableOpacity style={styles.button} onPress={selectImage}>
+            <Text style={styles.buttonText}>Selectionner une image</Text>
+          </TouchableOpacity>
+          <IconButton
+            icon="camera"
+            iconColor={MD3Colors.neutral0}
+            containerColor="#EEEEEE"
+            size={100}
+            onPress={() => navigation.navigate('CameraApp')}
+          />
+        </>
+      )}
     </View>
   );
 };
