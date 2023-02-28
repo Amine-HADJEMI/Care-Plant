@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+
 import axios from "axios";
 
 export default function Login({navigation}) {
@@ -12,55 +13,30 @@ export default function Login({navigation}) {
 
   axios.defaults.baseURL = 'http://localhost:3000/'
 
-  const loginSuccess = (email, password) => {
-    // const data = [
-    //   {
-    //     email: "toto@epsi.fr",
-    //     password: "1234"
-    //   },
-    //   {
-    //     email: "titi@epsi.fr",
-    //     password: "0000"
-    //   }, 
-    //   {
-    //     email: "test@epsi.fr",
-    //     password: "5555"
-    //   }
-    // ]
-  
+  const loginSuccess = (email, password) => {    
+    // console.log('ma data',{email, password})
+    
     axios.post('/login', {email, password})
     .then(response => {
-      navigation.navigate('Home')
-      console.log(response.data);
+      if (response.data.status === 60) {
+        console.log('invalid email or password')
+        setErrorMessage('invalid email or password')
+      } else if (response.data.status === 50) {
+        navigation.navigate('Home')
+        setErrorMessage(null)
+      }
+      console.log('reponse',response.data);
     })
     .catch(error => {
-    // Le code de statut HTTP n'est pas 200, l'authentification a échoué
-    console.log(error.response.data.message);
+      console.log(error.response.data.message);
     });
-
-    // Avoir aprés modification du back-------------------------------------------------------------------
-     const requestLogin = axios.post('/login', {email, password});
-     console.log('requestLogin',requestLogin)
-     const element = { email, password }
-     const isInData = data.find(obj => obj.email === element.email && obj.password === element.password);
-     
-     if (isInData) {
-       navigation.navigate('Home')
-       console.log("element exist in the database");
-     } else {
-       console.log("element is not existing in the database");
-
-       // window.alert('INVALID PASSWORD OR EMAIL');
-       setErrorMessage('Email ou mot de passe incorrect');
-     }
-     //----------------------------------------------------------------------------------------------------
   }
 
   return (
 
     <View style={styles.container}>
 
-    <Image source={require('./assets/arosa-je.png')} style={styles.logo} />
+    <Image source={require('../assets/arosa-je.png')} style={styles.logo} />
     
 
       <View style={styles.inputView}>
@@ -92,9 +68,6 @@ export default function Login({navigation}) {
       <TouchableOpacity style={styles.loginBtn} onPress={ () => loginSuccess(email, password) }> 
         <Text style={styles.loginText}>Connexion</Text>
       </TouchableOpacity> 
-
-      {/* Afficher le message d'erreur si nécessaire */}
-      {errorMessage && <p style={styles.errorStyle}>{errorMessage}</p>} 
       
       <TouchableOpacity style={styles.signUpBtn}
           onPress={() =>
@@ -102,8 +75,10 @@ export default function Login({navigation}) {
           }> 
           <Text style={styles.loginText}>Vous n'avez pas de compte?</Text> 
       </TouchableOpacity>
-      
+
+      {errorMessage && <Text style={styles.errorStyle}>INVALID E-MAIL OR PASSWORD</Text>} 
     </View> 
+    
   );
 }
 
@@ -126,6 +101,7 @@ const styles = StyleSheet.create({
   inputView: {
     backgroundColor: "#A1E79F",
     borderRadius: 30,
+    border : 'solid #8FCD8D',
     width: "70%",
     height: 45,
     marginBottom: 20,
@@ -165,7 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    // maxWidth: "500px",
+    maxWidth: 500,
   },
   loginText: {
     fontSize: "larger",

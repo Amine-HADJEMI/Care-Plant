@@ -20,7 +20,7 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+      <Image source={require('../../assets/arosa-je.png')} style={styles.logo} />
       <Text style={styles.welcome}>CarePlant</Text>
       <TouchableOpacity style={styles.button} onPress={selectImage}>
         <Text style={styles.buttonText}>Selectionner une image</Text>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    // maxWidth: "500px",
+    maxWidth: 500,
     marginBottom: "10%"
   },
   buttonText: {
