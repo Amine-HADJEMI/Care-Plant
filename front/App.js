@@ -3,10 +3,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Login from './login';
-import Signup from './signup';
-import Home from './Home';
-import CameraApp from './CameraApp';
+import Login from './src/components/Login';
+import Signup from './src/components/SignUp';
+import ForgetPassword from './src/components/ForgetPassword';
+import ChangePassword from './src/components/ChangePassword';
+import Home from './src/components/Home';
+import CameraApp from './src/components/CameraApp';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,14 @@ export default function App() {
             name="Signup"
             component={Signup}
           />
+        <Stack.Screen
+            name="ChangePassword"
+            component={ChangePassword}
+        />
+        <Stack.Screen
+            name="ForgetPassword"
+            component={ForgetPassword}
+        />
         <Stack.Screen
             options={{headerShown: true}}
             name="Home"

@@ -1,5 +1,8 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
 
 const UserController = require('../controllers/userController')
 
@@ -9,10 +12,10 @@ app.get("/", (req, res) => {
 
 app.get('/users',UserController.getAllUsers)
 
-app.post('/users', UserController.createUser)
+app.post('/create-user', UserController.createUser)
 
-app.delete('/users/:userName', UserController.deleteUser)
+app.put('/user/:userName', UserController.updateUser)
 
-app.put('/users/:userName', UserController.updateUser)
+app.delete('/user/:userName', UserController.deleteUser)
 
 module.exports = app;

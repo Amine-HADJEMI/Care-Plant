@@ -11,9 +11,7 @@ export default function Login({navigation}) {
 
     <View style={styles.container}>
 
-    <h1>Careplant</h1>
-
-    <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+    <Image source={require('./data/images/arosa-je.png')} style={styles.logo} />
     
 
       <View style={styles.inputView}>
@@ -37,7 +35,7 @@ export default function Login({navigation}) {
       
       <TouchableOpacity style={styles.mdpBtn}
           onPress={() =>
-            navigation.navigate('')
+            navigation.navigate('ForgetPassword')
           }> 
           <Text style={styles.loginText}>Mot de passe oublié</Text> 
       </TouchableOpacity>
@@ -66,9 +64,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    width: 260,
+    height: 130,
+    marginBottom: 70,
   },
   image: {
     marginBottom: 40,
@@ -82,9 +80,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: "center",
     maxWidth: 400,
-    
   },
   TextInput: {
+    borderRadius: 30,
     height: 50,
     flex: 1,
     padding: 5,
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    maxWidth: 500,
   },
   loginText: {
     fontSize: "larger",

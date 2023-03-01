@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    maxWidth: 500,
     marginBottom: "10%"
   },
   buttonText: {
