@@ -3,4 +3,6 @@ const app = express();
 
 const PhotoController = require('../controllers/photoController')
 
-app.post('/users',PhotoController.savePhoto)
+app.post('/savePhoto',PhotoController.savePhoto);
+
+module.exports = app;

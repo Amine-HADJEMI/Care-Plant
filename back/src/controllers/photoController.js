@@ -1,25 +1,22 @@
 const Database = require("../models/database");
 const sqlite3 = require("sqlite3");
 
-const db = Database.db
+const savePhoto = (req, res) => {
+  const plantId = req.body.plantId;
+  const photo = req.body.photo;
 
-async function savePhoto(req, res) {
-    const { uri } = req.body;
+  // Insert new photo into the photos table
+  const sql = `INSERT INTO photos(plant_id, photo_path) VALUES(?,?)`;
+  Database.db.run(sqlite3, [plantId, photo], function(err) {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).send({ error: 'Unable to save photo' });
+    }
+    console.log(`Photo has been saved with id ${this.lastID}`);
 
-    db.run(
-        "INSERT INTO photos (url) VALUES (?)",
-        [uri],
-        function (err) {
-            if (err) {
-                console.error(err.message);
-                res.status(500).send("Unable to save photo");
-            } else {
-                res.status(200).send({ url: uri });
-            }
-        }
-    );
-}
+    return res.status(200).send({ success: 'Photo saved successfully' });
+  });
+};
 
-module.exports = {
-    savePhoto
-}
+module.exports = { savePhoto };
+

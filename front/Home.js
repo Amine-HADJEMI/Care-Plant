@@ -15,30 +15,17 @@ export default function Home({navigation}) {
     });
     if (!result.cancelled) {
       setSelectedImage({ uri: result.uri });
-      saveImage(result.uri);
-    }
-  };
-
-  const saveImage = async (uri) => {
-    try {
-      const response = await fetch('http://your-api-url.com/savePhoto', {
+      setSelectedImage({ uri: result.uri });
+      fetch('http://localhost:3000/savePhoto', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          uri: uri
-        })
+          uri: result.uri,
+        }),
       });
-
-      const data = await response.json();
-
-      // Update the selectedImage state with the URL of the saved image
-      setSelectedImage({ uri: data.url });
-
-    } catch (error) {
-      console.error(error);
     }
   };
 

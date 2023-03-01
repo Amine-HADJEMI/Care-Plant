@@ -49,11 +49,6 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS plant_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )`);
 
-Database.db.run(`CREATE TABLE IF NOT EXISTS photos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    url TEXT NOT NULL
-)`);
-  
 
 // // insert test data into the users table
 // let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;
