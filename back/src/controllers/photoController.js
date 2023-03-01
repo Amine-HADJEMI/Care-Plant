@@ -2,7 +2,7 @@ const Database = require("../models/database");
 const sqlite3 = require("sqlite3");
 
 const savePhoto = (req, res) => {
-  const plantId = req.body.plantId;
+  // const plantId = req.body.plantId;
   const photo = req.body.photo;
 
   // Insert new photo into the photos table

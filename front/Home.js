@@ -3,6 +3,10 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { IconButton, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 
+
+axios.defaults.baseURL = 'http://localhost:3000/'
+
+
 export default function Home({navigation}) {
 
   const [selectedImage, setSelectedImage] = useState(null);
@@ -16,16 +20,29 @@ export default function Home({navigation}) {
     if (!result.cancelled) {
       setSelectedImage({ uri: result.uri });
       setSelectedImage({ uri: result.uri });
-      fetch('http://localhost:3000/savePhoto', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          uri: result.uri,
-        }),
-      });
+      
+      //send good format of photo to the back!!
+      axios.post('/savePhoto', photo)
+      .then(response => {
+        console.log(response.data)
+        //if(response.status === 10 ){
+            
+        // }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+      // fetch('http://localhost:3000/savePhoto', {
+      //   method: 'POST',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     uri: result.uri,
+      //   }),
+      // });
     }
   };
 
