@@ -6,18 +6,18 @@ Database.db = new sqlite3.Database(
   "database.db",
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
   (err) => {
-  if (err) {
-    console.error(err.message);
+    if (err) {
+      console.error(err.message);
+    }
+    console.log("Connected to the database.");
   }
-  console.log("Connected to the database.");
-});
-
+);
 
 // Create users table
 Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     userName TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL ,
     password TEXT NOT NULL
 )`);
 
@@ -48,7 +48,6 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS tips (
 Database.db.run(`CREATE TABLE IF NOT EXISTS plant_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )`);
-
 
 // // insert test data into the users table
 // let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;

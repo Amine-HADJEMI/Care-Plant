@@ -1,7 +1,10 @@
 const request = require("supertest");
-const app = require("../routes/userRoutes");
 const bcrypt = require("bcrypt");
+const app = require("../routes/userRoutes");
+const Database = require("../models/database");
+const db = Database.db;
 
+// Test de la route GET /users
 describe("Test de l'API", () => {
   it('Devrait renvoyer un message "Welcome to BACK -- CarePlant..."', async () => {
     const res = await request(app).get("/");
@@ -10,7 +13,6 @@ describe("Test de l'API", () => {
   });
 });
 
-// Test de la route GET /users
 describe("GET /users", () => {
   it("Devrait renvoyer une liste de tous les utilisateurs", async () => {
     const res = await request(app).get("/users");
@@ -18,22 +20,80 @@ describe("GET /users", () => {
     expect(Array.isArray(res.body)).toBeTruthy();
   });
 });
-//Test de la route POST /create-user
+
+// Test de la route POST /create-user
 describe("createUser", () => {
-  it("creates a user successfully", async () => {
+  let existingUser;
+  let newUser;
+
+  beforeAll(async () => {
+    await db.run(
+      "CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, userName TEXT, name TEXT, email TEXT, password TEXT)"
+    );
+
     const saltRounds = 10;
-    const password = await bcrypt.hash("password", saltRounds);
-    const user = {
-      userName: "1",
-      name: "New User",
-      email: "new@example.com",
-      password: password,
+    const password = "password";
+    const hash = await bcrypt.hash(password, saltRounds);
+
+    // create an existing user
+    existingUser = {
+      userName: "existingUser",
+      name: "Existing User",
+      email: "existinguser@example.com",
+      password: hash,
     };
+    await db.run(
+      "INSERT INTO users (userName, name, email, password) VALUES (?, ?, ?, ?)",
+      [
+        existingUser.userName,
+        existingUser.name,
+        existingUser.email,
+        existingUser.password,
+      ]
+    );
+
+    // create a new user
+    newUser = {
+      userName: "newUser",
+      name: "New User",
+      email: "newuser@example.com",
+      password: "password",
+    };
+  });
+
+  afterAll(async () => {
+    await db.run("DROP TABLE IF EXISTS users");
+    await db.close();
+  });
+
+  it("should create a new user", async () => {
     const response = await request(app)
       .post("/create-user")
-      .send(user)
-      .expect(201)
-      .expect("User created successfully");
-    expect(response.body).toMatchObject({});
+      .send(newUser)
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(201);
+    expect(response.text).toBe("User created successfully");
+  });
+
+  it("should not create a user with the same userName or email", async () => {
+    const response = await request(app)
+      .post("/create-user")
+      .send(existingUser)
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe("User already exists");
+  });
+
+  it("should not create a user with incomplete data", async () => {
+    const response = await request(app)
+      .post("/create-user")
+      .send({
+        name: "New User",
+        email: "newuser@example.com",
+        password: "password",
+      })
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe("Please complete the data");
   });
 });
