@@ -9,12 +9,14 @@ import {
 
 import axios from 'axios'
 
+import Status from '../utils/status'
+
 axios.defaults.baseURL = 'http://localhost:3000/'
 
 export default class ForgetPassword extends React.Component {
   state = {
     email: '',
-    invalidEmail: false
+    errorMessage: ''
   }
   
   onChangeText = (key, val) => {
@@ -26,13 +28,20 @@ export default class ForgetPassword extends React.Component {
       email: this.state.email,
     };
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     console.log('votre adresse mail est',data.email)
-  
+    
+    if (!emailRegex.test(data.email) ) {
+      this.setState({ errorMessage: 'Le format de l\'email est invalide' });
+      return
+    }  
+
     axios.post('/send-confirmation-email', {email: data.email})
     .then(response => {
       console.log('is True avant', this.state.invalidEmail)
-      if(response.data.status === 40){
-        this.state.invalidEmail = true
+      if(response.data.status === Status.UNKNOWN_USER){
+        this.setState({ errorMessage: 'Utilisateur non existant' })
       }
       console.log('is True apres', this.state.invalidEmail)
 
@@ -64,7 +73,7 @@ export default class ForgetPassword extends React.Component {
           <Text style={styles.loginText}>Suivant</Text> 
         </TouchableOpacity>
 
-        {this.state.invalidEmail && <Text style={styles.errorStyle}>INVALID E-MAIL</Text>} 
+        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
 
       </View>
     )

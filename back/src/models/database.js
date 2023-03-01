@@ -32,7 +32,7 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS plants (
 Database.db.run(`CREATE TABLE IF NOT EXISTS photos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     plant_id INTEGER NOT NULL,
-    photo_path TEXT NOT NULL,
+    photo BLOB,
     FOREIGN KEY (plant_id) REFERENCES plants(id)
 )`);
 

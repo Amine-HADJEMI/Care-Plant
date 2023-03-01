@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { IconButton, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
-
+import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:3000/'
 
@@ -51,7 +51,7 @@ export default function Home({navigation}) {
       {selectedImage && <Image source={{ uri: selectedImage.uri }} style={styles.image} />}
       {!selectedImage && (
         <>
-          <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+          <Image source={require('../assets/arosa-je.png')} style={styles.logo} />
           <Text style={styles.welcome}>CarePlant</Text>
           <TouchableOpacity style={styles.button} onPress={selectImage}>
             <Text style={styles.buttonText}>Selectionner une image</Text>

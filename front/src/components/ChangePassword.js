@@ -48,7 +48,7 @@ export default class ChangePassword extends React.Component {
         />
         <TextInput
           style={styles.input}
-          placeholder='Nouveau Password'
+          placeholder='Nouveau Mot de Passe'
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
@@ -56,7 +56,7 @@ export default class ChangePassword extends React.Component {
         />
         <TextInput
           style={styles.input}
-          placeholder='Confirm New Password'
+          placeholder='Confirmation du noveau mot de passe'
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
