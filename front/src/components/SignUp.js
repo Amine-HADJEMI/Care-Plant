@@ -8,13 +8,22 @@ import {
 } from 'react-native'
 
 import axios from 'axios'
+import Status from '../utils/status'
 
 axios.defaults.baseURL = 'http://localhost:3000/'
 
 export default class SignUp extends React.Component {
   state = {
-    username: '', name: '', password: '', email: ''
-  }
+    username: '',
+    name: '',
+    password: '',
+    email: '',
+    // isIncomplete: false,
+    // invalidEmail: false,
+    // invalidPassword: false
+    errorMessage: '',
+  };
+
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
   }
@@ -32,19 +41,29 @@ export default class SignUp extends React.Component {
 
     if (!user.userName || !user.name || !user.email || !user.password){
       console.log('veuillez compléter tout les champs')
+      this.setState({ errorMessage: 'Veuillez compléter tous les champs' });      
       return
     }
-    if (!emailRegex.test(user.email) || !passwordRegex.test(user.password) ) {
-      console.log('Le format de l\'email est invalide');
-      console.log('Le mot de passe doit contenir au moins 6 caractères');
+    if (!emailRegex.test(user.email) ) {
+      this.setState({ errorMessage: 'Le format de l\'email est invalide' });
+
       return
     }  
+    if (!passwordRegex.test(user.password)){
+      this.setState({ errorMessage: 'Le mot de passe doit contenir au moins 6 caractères' });
+      return
+    } 
 
     console.log('ma user: ',user)
     axios.post('/create-user', user)
     .then(response => {
       console.log(response.data)
-      
+      if(response.data.status === Status.USER_ALREADY_EXISTS){
+        this.setState({ errorMessage: 'Utilisateur déja existant' })
+      }
+      if(response.data.status === Status.CREATE_USER){
+        //TODO navigation to Login !
+      }
     })
     .catch(error => {
       console.log('eeeeeroooooor', error)
@@ -89,6 +108,8 @@ export default class SignUp extends React.Component {
         > 
           <Text style={styles.loginText} >Sign Up</Text> 
         </TouchableOpacity>
+
+        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
       </View>
     )
   }
@@ -146,4 +167,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: 400,
   },
+  errorStyle: {
+    color: 'red',
+    paddingTop: '2%'
+  }
 })
