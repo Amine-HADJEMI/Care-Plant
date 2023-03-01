@@ -6,7 +6,7 @@ const savePhoto = (req, res) => {
   const photo = req.body.photo;
 
   // Insert new photo into the photos table
-  const sql = `INSERT INTO photos(plant_id, photo_path) VALUES(?,?)`;
+  const sqlite3 = `INSERT INTO photos(plant_id, photo_path) VALUES(?,?)`;
   Database.db.run(sqlite3, [plantId, photo], function(err) {
     if (err) {
       console.error(err.message);
