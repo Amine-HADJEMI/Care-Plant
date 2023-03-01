@@ -37,11 +37,16 @@ export default class ForgetPassword extends React.Component {
       return
     }  
 
-    axios.post('/send-confirmation-email', {email: data.email})
+    axios.post('/send-confirmation-email', { email: data.email })
     .then(response => {
       console.log('is True avant', this.state.invalidEmail)
       if(response.data.status === Status.UNKNOWN_USER){
         this.setState({ errorMessage: 'Utilisateur non existant' })
+      }
+      if(response.data.status === Status.MAIL_SENDED_SUCCESSFULLY){
+        // navigate to Change Password 
+        // navigation.navigate('ChangePassword')
+        console.log('todo navigate')
       }
       console.log('is True apres', this.state.invalidEmail)
 

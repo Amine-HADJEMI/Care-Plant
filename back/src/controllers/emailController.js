@@ -53,10 +53,10 @@ async function sendConfirmationEmail(req, res){
         res.status(500).send('Une erreur est survenue lors de l\'envoi de l\'e-mail');
       } else {
         console.log('E-mail envoyé : ' + info.response);
-        
-        db.execute('INSERT INTO password_reset_codes (email, code) VALUES (?, ?)', [email, confirmationCode]);
+        //TODO ADD new table to save our code to reset password
+        // db.execute('INSERT INTO password_reset_codes (email, code) VALUES (?, ?)', [email, confirmationCode]);
 
-        res.status(200).send('E-mail envoyé avec succès');
+        res.status(200).send({message: 'E-mail envoyé avec succès', status: Status.MAIL_SENDED_SUCCESSFULLY });
       } 
     });
   }
