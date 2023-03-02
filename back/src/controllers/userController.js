@@ -67,9 +67,9 @@ async function updateUser(req, res) {
     [userName, name, email, password],
     (err) => {
       if (err) {
-        return res.status(500).json({ error: "Error updating user" });
+        return res.status(500).send("Error updating user");
       }
-      res.json({ message: "User updated successfully" });
+      res.status(200).send("User updated successfully");
     }
   );
 }

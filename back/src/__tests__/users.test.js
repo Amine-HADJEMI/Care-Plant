@@ -21,8 +21,8 @@ describe("GET /users", () => {
   });
 });
 
-// Test de la route POST /create-user
-describe("createUser", () => {
+// Test des routes POST/PUT/DELETE
+describe("TEST API", () => {
   let existingUser;
   let newUser;
 
@@ -65,7 +65,7 @@ describe("createUser", () => {
     await db.run("DROP TABLE IF EXISTS users");
     await db.close();
   });
-
+  //Creation user
   it("should create a new user", async () => {
     const response = await request(app)
       .post("/create-user")
@@ -95,5 +95,24 @@ describe("createUser", () => {
       .set("Accept", "application/json");
     expect(response.statusCode).toBe(200);
     expect(response.text).toBe("Please complete the data");
+  });
+  // Mise à jour user
+  it("should update an existing user", async () => {
+    const response = await request(app)
+      .put(`/user/${existingUser.userName}`)
+      .send({ name: "Updated User" })
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe("User updated successfully");
+  });
+  //Suppresion user
+  it("should delete an existing user", async () => {
+    const response = await request(app)
+      .delete(`/user/${existingUser.userName}`)
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe(
+      `User with userName ${existingUser.userName} deleted`
+    );
   });
 });
