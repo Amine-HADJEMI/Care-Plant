@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const Database = require("../models/database");
-const sqlite3 = require("sqlite3");
+const Status = require("../utils/status")
 
 const db = Database.db
 
@@ -23,12 +23,10 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res) {
   try {
-    // Hash the password
     const password = req.body.password;
     const saltRounds = 10;
     const hash = await bcrypt.hash(password, saltRounds);
 
-    // Insert the new user into the database
     if (req.body.userName && req.body.email) {
       const existingUsers = await new Promise((resolve, reject) => {
         db.all(
@@ -43,7 +41,7 @@ async function createUser(req, res) {
       });
 
       if (existingUsers.length > 0) {
-        res.status(400).send('User already exists');
+        res.status(200).send({ message: 'User already exists', status: Status.USER_ALREADY_EXISTS });
       }
       else {
         const stmt = db.prepare(
@@ -52,14 +50,14 @@ async function createUser(req, res) {
         stmt.run(
           req.body.userName,
           req.body.name,
-          req.body.email,
+          req.body.email.toLowerCase(),
           hash
         );
         stmt.finalize();
-        res.status(201).send('User created successfully');
+        res.status(201).send({ message:'User created successfully', status: Status.CREATE_USER});
       }
     } else {
-      res.status(400).send('Please complete the data');
+      res.status(200).send({ message:'Please complete the data', status: Status.INCOMPELETE_DATA });
     }
   } catch (error) {
     console.error(error);
