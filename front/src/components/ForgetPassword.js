@@ -44,8 +44,8 @@ export default class ForgetPassword extends React.Component {
         this.setState({ errorMessage: 'Utilisateur non existant' })
       }
       if(response.data.status === Status.MAIL_SENDED_SUCCESSFULLY){
-        // navigate to Change Password 
-        // navigation.navigate('ChangePassword')
+        this.props.navigation.navigate('ChangePassword')
+
         console.log('todo navigate')
       }
       console.log('is True apres', this.state.invalidEmail)
