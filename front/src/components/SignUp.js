@@ -46,6 +46,7 @@ export default class SignUp extends React.Component {
     }
     if (!emailRegex.test(user.email) ) {
       this.setState({ errorMessage: 'Le format de l\'email est invalide' });
+
       return
     }  
     if (!passwordRegex.test(user.password)){

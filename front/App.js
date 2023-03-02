@@ -11,6 +11,7 @@ import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
 // import Publication from './src/components/Publication'
 
+
 const Stack = createStackNavigator();
 
 export default function App() {

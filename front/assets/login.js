@@ -41,7 +41,7 @@ export default function Login({navigation}) {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.loginBtn} onPress={() =>
-            navigation.navigate('HomePage')
+            navigation.navigate('Home')
           }> 
         <Text style={styles.loginText}>Connexion</Text> 
       </TouchableOpacity> 
