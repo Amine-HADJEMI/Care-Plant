@@ -9,6 +9,7 @@ import ForgetPassword from './src/components/ForgetPassword';
 import ChangePassword from './src/components/ChangePassword';
 import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
+// import Publication from './src/components/Publication'
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,11 @@ export default function App() {
             name="CameraApp"
             component={CameraApp}
           />
+          {/* <Stack.Screen
+            options={{headerShown: true}}
+            name="Publication"
+            component={Publication}
+          /> */}
         </Stack.Navigator>
       </NavigationContainer>
   );

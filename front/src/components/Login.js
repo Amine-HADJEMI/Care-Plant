@@ -22,7 +22,7 @@ export default function Login({navigation}) {
         console.log('invalid email or password')
         setErrorMessage('invalid email or password')
       } else if (response.data.status === 50) {
-        navigation.navigate('Home')
+        navigation.navigate('HomePage')
         setErrorMessage(null)
       }
       console.log('reponse',response.data);
