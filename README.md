@@ -5,10 +5,10 @@
 ## **Auteurs**
 
  - FATHALLAH Mohamed Amine 
- - Mohammed Amine 
  - Baran Rémi
  - Derhille Erwan
  - Dokounin Vladislav
+ - HADJEMI Mohamed El Amine 
 
 
 ## **Introduction**
