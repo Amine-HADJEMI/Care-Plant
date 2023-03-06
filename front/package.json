@@ -6,7 +6,8 @@
     "start": "NODE_OPTIONS=--openssl-legacy-provider npm-run-all ...",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "cypress": "cypress open"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
@@ -36,7 +37,8 @@
     "yet": "^0.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "cypress": "^12.7.0"
   },
   "private": true
 }
