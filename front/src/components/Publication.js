@@ -1,10 +1,11 @@
-/* import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from '@expo/vector-icons';
-import colors from '../colors';
+import colors from '../styles/colors';
+// import { FontAwesome } from '@expo/vector-icons';
 // import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import { database } from "../config/firebase";
+// import { database } from "../config/firebase";
+import axios from "axios";
 
 axios.defaults.baseURL = 'http://localhost:3000/'
 
@@ -34,19 +35,19 @@ const Publication = () => {
     //     fetchPosts();
     // }, []);
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        const fetchPosts = async () => {
-            try {
-                const response = await axios.get('/posts');
-                const data = response.data;
-                setPosts(data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchPosts();
-    }, []);
+    //     const fetchPosts = async () => {
+    //         try {
+    //             const response = await axios.get('/posts');
+    //             const data = response.data;
+    //             setPosts(data);
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     };
+    //     fetchPosts();
+    // }, []);
 
     const renderItem = ({ item }) => (
         <View style={styles.item}>
@@ -99,4 +100,3 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
 });
- */

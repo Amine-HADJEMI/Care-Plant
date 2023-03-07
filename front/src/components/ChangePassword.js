@@ -13,7 +13,7 @@ axios.defaults.baseURL = 'http://localhost:3000/'
 
 export default class ChangePassword extends React.Component {
   state = {
-    confimCode: '', newPassword: '', confirmPassword: ''
+    email:'m.hadjemi@epsi.fr', confirmCode: '', newPassword: '', confirmPassword: ''
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
@@ -21,19 +21,24 @@ export default class ChangePassword extends React.Component {
  
   changePassword = () => {
     const data = {
-      confimCode : this.state.confimCode,      
+      email: this.state.email,
+      confirmCode : this.state.confirmCode,      
       newPassword: this.state.newPassword,
       confirmPassword: this.state.confirmPassword
     };
 
     console.log('ma data: ',data)
-    // axios.post('/changePassword', data)
-    // .then(response => {
-    //   console.log(response.data)
-    // })
-    // .catch(error => {
-    //   console.log(error)
-    // })
+    axios.post('/change-password', data)
+    .then(response => {
+      
+      if(response.data.status === Status.CREATE_USER){
+        this.props.navigation.navigate('HomePage')
+        console.log(response.data)
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   render() {
@@ -44,7 +49,7 @@ export default class ChangePassword extends React.Component {
           placeholder='Code récu par E-mail'
           autoCapitalize="none"
           placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('confimCode', val)}
+          onChangeText={val => this.onChangeText('confirmCode', val)}
         />
         <TextInput
           style={styles.input}

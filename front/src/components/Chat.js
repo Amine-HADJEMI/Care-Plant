@@ -1,105 +1,195 @@
-// import React, {
-//     useState,
-//     useEffect,
-//     useLayoutEffect,
-//     useCallback
-//   } from 'react';
-//   import { TouchableOpacity, Text } from 'react-native';
-//   import { GiftedChat } from 'react-native-gifted-chat';
-//   import {
-//     collection,
-//     addDoc,
-//     orderBy,
-//     query,
-//     onSnapshot
-//   } from 'firebase/firestore';
-//   import { signOut } from 'firebase/auth';
-//   import { auth, database } from '../config/firebase';
-//   import { useNavigation } from '@react-navigation/native';
-//   import { AntDesign } from '@expo/vector-icons';
-//   import colors from '../colors';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+// import io from 'socket.io-client';
 
+// const socket = io('http://localhost:3000');
+axios.defaults.baseURL = 'http://localhost:3000/'
 
-//   export default function Chat() {
+export default function ChatScreen() {
+  
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState('');
+  const [username, setUsername] = useState('');
 
-//     const [messages, setMessages] = useState([]);
-//     const navigation = useNavigation();
+  useEffect(() => {
+    axios.get(`/messages`)
+      .then((response) => {
+        setMessages(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  
+    // socket.on('new-message', (message) => {
+    //   setMessages((prevMessages) => [...prevMessages, message]);
+    // });
+  }, []);
+  
 
-//   const onSignOut = () => {
-//       signOut(auth).catch(error => console.log('Error logging out: ', error));
-//     };
+  const handleSend = () => {
+    if (inputText) {
+      const message = {
+        text: inputText,
+        user: username,
+        createdAt: new Date().toISOString(),
+      };
+      axios.post(`/addMessage`, message)
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+  
+      // socket.emit('send-message', message);
+  
+      setInputText('');
+    }
+  };
 
-//     useLayoutEffect(() => {
-//         navigation.setOptions({
-//           headerRight: () => (
-//             <TouchableOpacity
-//               style={{
-//                 marginRight: 10
-//               }}
-//               onPress={onSignOut}
-//             >
-//               <AntDesign name="logout" size={24} color={colors.gray} style={{marginRight: 10}}/>
-//             </TouchableOpacity>
-//           )
-//         });
-//       }, [navigation]);
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.messageContainer}>
+      <Text style={styles.username}>
+        <Icon name="circle" size={15} color="#000" /> {item.user}
+      </Text>
+        <Text style={styles.text}>{item.text}</Text>
+        <Text style={styles.createdAt}>{item.createdAt}</Text>
+      </View>
+    );
+  };
 
-//     useLayoutEffect(() => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={messages}
+        renderItem={renderItem}
+        keyExtractor={(item) => item._id}
+        inverted={true}
+      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Type your message here..."
+          value={inputText}
+          onChangeText={setInputText}
+        />
+        <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+          <Text style={styles.sendButtonText}>Send</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+}
 
-//         const collectionRef = collection(database, 'chats');
-//         const q = query(collectionRef, orderBy('createdAt', 'desc'));
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F7F7F7',
+  },
+  messageContainer: {
+    marginVertical: 10,
+    marginHorizontal: 20,
+  },
+  username: {
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  createdAt: {
+    color: '#BBBBBB',
+    fontSize: 12,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    margin: 10,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginRight: 10,
+  },
+  sendButton: {
+    backgroundColor: '#1E90FF',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  sendButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  bullet: {
+    marginRight: 5,
+  },
+  // message: {
+  //   borderWidth: 2, 
+  //   borderColor: 'red' 
+  // }
+});
+/*
+import React, { useState, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
+import axios from 'axios';
 
-//     const unsubscribe = onSnapshot(q, querySnapshot => {
-//         console.log('querySnapshot unsusbscribe');
-//           setMessages(
-//             querySnapshot.docs.map(doc => ({
-//               _id: doc.data()._id,
-//               createdAt: doc.data().createdAt.toDate(),
-//               text: doc.data().text,
-//               user: doc.data().user
-//             }))
-//           );
-//         });
-//     return unsubscribe;
-//       }, []);
+axios.defaults.baseURL = 'http://localhost:3000/'
 
-//     const onSend = useCallback((messages = []) => {
-//         setMessages(previousMessages =>
-//           GiftedChat.append(previousMessages, messages)
-//         );
-//         // setMessages([...messages, ...messages]);
-//         const { _id, createdAt, text, user } = messages[0];    
-//         addDoc(collection(database, 'chats'), {
-//           _id,
-//           createdAt,
-//           text,
-//           user
-//         });
-//       }, []);
+export default function ChatScreen() {
 
-//       return (
-//         // <>
-//         //   {messages.map(message => (
-//         //     <Text key={message._id}>{message.text}</Text>
-//         //   ))}
-//         // </>
-//         <GiftedChat
-//           messages={messages}
-//           showAvatarForEveryMessage={false}
-//           showUserAvatar={false}
-//           onSend={messages => onSend(messages)}
-//           messagesContainerStyle={{
-//             backgroundColor: '#fff'
-//           }}
-//           textInputStyle={{
-//             backgroundColor: '#fff',
-//             borderRadius: 20,
-//           }}
-//           user={{
-//             _id: auth?.currentUser?.email,
-//             avatar: 'https://ui-avatars.com/api/?size=300'
-//           }}
-//         />
-//       );
-// }
+  const [messages, setMessages] = useState([]);
 
+  useEffect(() => {
+    axios.get(`/messages`)
+      .then((response) => {
+        setMessages(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleSend = (newMessages = []) => {
+    const message = newMessages[0];
+    axios.post(`/addMessage`, message)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    setMessages(GiftedChat.append(messages, newMessages));
+  };
+
+  return (
+    <GiftedChat
+      messages={messages}
+      onSend={handleSend}
+      user={{ _id: 1, name: 'Test User' }}
+      placeholder='Type your message here...'
+      renderUsernameOnMessage
+      showUserAvatar
+      inverted={false}
+    />
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+});
+*/

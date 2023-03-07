@@ -18,9 +18,6 @@ export default class SignUp extends React.Component {
     name: '',
     password: '',
     email: '',
-    // isIncomplete: false,
-    // invalidEmail: false,
-    // invalidPassword: false
     errorMessage: '',
   };
 
@@ -63,6 +60,7 @@ export default class SignUp extends React.Component {
       }
       if(response.data.status === Status.CREATE_USER){
         //TODO navigation to Login !
+        this.props.navigation.navigate('HomePage')
       }
     })
     .catch(error => {

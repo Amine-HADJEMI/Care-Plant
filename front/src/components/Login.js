@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 
 import axios from "axios";
+// import io from 'socket.io-client';
 
 export default function Login({navigation}) {
-
+  
+  // const socket = io('http://localhost:3000');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,6 +17,7 @@ export default function Login({navigation}) {
 
   const loginSuccess = (email, password) => {    
     // console.log('ma data',{email, password})
+    // navigation.navigate('HomePage')
     
     axios.post('/login', {email, password})
     .then(response => {
@@ -22,7 +25,9 @@ export default function Login({navigation}) {
         console.log('invalid email or password')
         setErrorMessage('invalid email or password')
       } else if (response.data.status === 50) {
-        navigation.navigate('Home')
+        // socket.emit('login', { email });
+        navigation.navigate('HomePage')
+        // navigation.navigate('Publication')
 
         setErrorMessage(null)
       }

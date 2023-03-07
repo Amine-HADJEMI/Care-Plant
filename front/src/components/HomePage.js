@@ -7,6 +7,9 @@ import colors from '../styles/colors';
 // import { collection, addDoc } from "firebase/firestore";
 // import { database } from "../config/firebase";
 import * as ImagePicker from 'expo-image-picker';
+import axios from "axios";
+
+axios.defaults.baseURL = 'http://localhost:3000/'
 
 
 const HomePage = () => {
@@ -38,7 +41,7 @@ const HomePage = () => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [4, 3],
+        aspect: [500, 30],
         quality: 1,
       });
   
@@ -58,9 +61,17 @@ const HomePage = () => {
         //   title,
         //   description,
         //   image,
-        //   createdAt: new Date(),
+        //   createdAt: new Date(),   
         // });
         // console.log("Document écrit avec ID: ", docRef.id);
+        axios.post('/savePhoto', {title, description, image})
+        .then(response => {
+          console.log('reponse',response.data);
+        })
+        .catch(error => {
+          console.log(error.response.data.message);
+        });
+
         setTitle("");
         setDescription("");
         setImage(null);
