@@ -3,8 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
-const EmailController = require("../controllers/emailController");
 
-app.post("/send-confirmation-email", EmailController.sendConfirmationEmail);
+const PhotoController = require('../controllers/photoController')
 
+app.post('/savePhoto', PhotoController.savePhoto);
+ 
 module.exports = app;

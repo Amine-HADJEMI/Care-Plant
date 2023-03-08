@@ -9,11 +9,14 @@ import {
 
 import axios from 'axios'
 
+import Status from '../utils/status'
+
 axios.defaults.baseURL = 'http://localhost:3000/'
 
 export default class ForgetPassword extends React.Component {
   state = {
-    email: ''
+    email: '',
+    errorMessage: ''
   }
   
   onChangeText = (key, val) => {
@@ -25,15 +28,33 @@ export default class ForgetPassword extends React.Component {
       email: this.state.email,
     };
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     console.log('votre adresse mail est',data.email)
-  
-    // axios.post('/sendMail', data.email)
-    // .then(response => {
-    //   console.log(response.data)
-    // })
-    // .catch(error => {
-    //   console.log(error)
-    // })
+    
+    if (!emailRegex.test(data.email) ) {
+      this.setState({ errorMessage: 'Le format de l\'email est invalide' });
+      return
+    }  
+
+    axios.post('/send-confirmation-email', { email: data.email })
+    .then(response => {
+      console.log('is True avant', this.state.invalidEmail)
+      if(response.data.status === Status.UNKNOWN_USER){
+        this.setState({ errorMessage: 'Utilisateur non existant' })
+      }
+      if(response.data.status === Status.MAIL_SENDED_SUCCESSFULLY){
+        this.props.navigation.navigate('ChangePassword')
+
+        console.log('todo navigate')
+      }
+      console.log('is True apres', this.state.invalidEmail)
+
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   render() {
@@ -52,10 +73,13 @@ export default class ForgetPassword extends React.Component {
           onChangeText={val => this.onChangeText('email', val)}
         />
         <TouchableOpacity style={styles.signUpBtn} 
-          onPress= {() => {navigation.navigate('ChangePassword') }}
+          onPress= {() => this.changePassword() }
         > 
-          <Text style={styles.loginText} >Suivant</Text> 
+          <Text style={styles.loginText}>Suivant</Text> 
         </TouchableOpacity>
+
+        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
+
       </View>
     )
   }
@@ -73,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     width: "80%",
-    maxWidth: "500px",
+    maxWidth: 500,
   },
   container: {
     flex: 1,
@@ -88,7 +112,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 40,
     backgroundColor: "#66D163",
-    maxWidth: "500px",
+    maxWidth: 500,
   },
   loginText: {
     fontSize: "larger",
@@ -99,4 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     margin: 60  , 
   },
+  errorStyle: {
+    color: "red",
+  }
 })

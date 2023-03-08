@@ -17,10 +17,8 @@ async function loginUser(req, res){
       return res.status(200).json({ errors: errors.array(), status: Status.INVALID_EMAIL_OR_PASSWORD });
     }
 
-    // const row =  db.get('SELECT * FROM users WHERE email = ?', [email]);
-    
     const existingUser = await new Promise((resolve, reject) => {
-      db.all('SELECT * FROM users WHERE email = ?', [email], 
+      db.all('SELECT * FROM users WHERE email = ?', [email.toLowerCase()], 
         (err, rows) => {
         if (err) {
           reject(err);

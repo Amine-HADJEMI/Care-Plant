@@ -6,18 +6,18 @@ Database.db = new sqlite3.Database(
   "database.db",
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
   (err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log("Connected to the database.");
+  if (err) {
+    console.error(err.message);
   }
-);
+  console.log("Connected to the database.");
+});
+
 
 // Create users table
 Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     userName TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    email TEXT NOT NULL ,
+    email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
 )`);
 
@@ -32,7 +32,7 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS plants (
 Database.db.run(`CREATE TABLE IF NOT EXISTS photos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     plant_id INTEGER NOT NULL,
-    photo_path TEXT NOT NULL,
+    photo BLOB,
     FOREIGN KEY (plant_id) REFERENCES plants(id)
 )`);
 
@@ -48,6 +48,28 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS tips (
 Database.db.run(`CREATE TABLE IF NOT EXISTS plant_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )`);
+
+        // _id TEXT PRIMARY KEY,
+        // createdAt TEXT,
+        // text TEXT,
+        // user TEXT
+
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        text TEXT NOT NULL,
+        user TEXT NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`
+)
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS password_reset_codes (
+        email VARCHAR(255) NOT NULL,
+        code VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (email)
+    );`
+)
 
 // // insert test data into the users table
 // let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;
