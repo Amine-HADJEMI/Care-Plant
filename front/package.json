@@ -7,8 +7,13 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "cypress": "cypress open"
+    "cypress": "cypress open",
+    "test": "cypress run"
   },
+  "browserslist": [
+    "last 2 versions",
+    "not dead"
+  ],
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@expo/webpack-config": "^0.17.2",
@@ -38,7 +43,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "cypress": "^12.7.0"
+    "cypress": "^12.7.0",
+    "enzyme": "^3.11.0"
   },
   "private": true
 }
