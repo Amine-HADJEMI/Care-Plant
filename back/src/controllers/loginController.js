@@ -39,7 +39,13 @@ async function loginUser(req, res){
       return res.status(200).json({ message: 'Mot de passe incorrect', status: Status.INVALID_EMAIL_OR_PASSWORD });
     }
 
-    res.json({ message: 'Authentification réussie', status: Status.SUCCESS_AUTHENTIFICATION_USER });
+    res.json({ 
+      message: 'Authentification réussie', 
+      status: Status.SUCCESS_AUTHENTIFICATION_USER, 
+      user: {
+        name: user.name,
+        email: user.email
+      } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Erreur de base de données' });

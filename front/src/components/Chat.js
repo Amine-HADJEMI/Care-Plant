@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import io from 'socket.io-client';
+import Port from '../utils/portServer'
+import { useSelector } from 'react-redux';
 
-// const socket = io('http://localhost:3000');
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 export default function ChatScreen() {
+const userData = useSelector((state) => state.user);
   
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
-  const [username, setUsername] = useState('');
 
   useEffect(() => {
     axios.get(`/messages`)
@@ -21,10 +21,6 @@ export default function ChatScreen() {
       .catch((error) => {
         console.error(error);
       });
-  
-    // socket.on('new-message', (message) => {
-    //   setMessages((prevMessages) => [...prevMessages, message]);
-    // });
   }, []);
   
 
@@ -32,19 +28,17 @@ export default function ChatScreen() {
     if (inputText) {
       const message = {
         text: inputText,
-        user: username,
+        user: userData.name,
         createdAt: new Date().toISOString(),
       };
-      axios.post(`/addMessage`, message)
+      axios.post(`/add-message`, message)
         .then((response) => {
           console.log(response.data);
         })
         .catch((error) => {
           console.error(error);
         });
-  
-      // socket.emit('send-message', message);
-  
+    
       setInputText('');
     }
   };
@@ -139,57 +133,3 @@ const styles = StyleSheet.create({
   //   borderColor: 'red' 
   // }
 });
-/*
-import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'http://localhost:3000/'
-
-export default function ChatScreen() {
-
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    axios.get(`/messages`)
-      .then((response) => {
-        setMessages(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  const handleSend = (newMessages = []) => {
-    const message = newMessages[0];
-    axios.post(`/addMessage`, message)
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    setMessages(GiftedChat.append(messages, newMessages));
-  };
-
-  return (
-    <GiftedChat
-      messages={messages}
-      onSend={handleSend}
-      user={{ _id: 1, name: 'Test User' }}
-      placeholder='Type your message here...'
-      renderUsernameOnMessage
-      showUserAvatar
-      inverted={false}
-    />
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});
-*/

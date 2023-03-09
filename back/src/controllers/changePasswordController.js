@@ -37,7 +37,7 @@ async function changePassword(req, res){
           console.error(err);
           return res.status(500).send({ message: 'Erreur du serveur' });
         }
-        return res.status(201).send({ message: 'Mot de passe modifié avec succès' });
+        return res.status(201).send({ message: 'Mot de passe modifié avec succès', status: Status.UPDATE_PASSWORD_SUCCESSFULLY});
       });
     });  
   } catch(e){

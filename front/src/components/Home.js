@@ -3,8 +3,9 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { IconButton, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import Port from '../utils/portServer'
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 
 export default function Home({navigation}) {

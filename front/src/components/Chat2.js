@@ -19,10 +19,11 @@ import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import colors from '../styles/colors';
 import axios from 'axios';
+import Port from '../utils/portServer'
 
 
   export default function Chat() {
-    axios.defaults.baseURL = 'http://localhost:3000/'
+    axios.defaults.baseURL = Port.LOCALHOST_WEB
 
     const [messages, setMessages] = useState([]);
     const navigation = useNavigation();
@@ -85,7 +86,7 @@ import axios from 'axios';
         setMessages([...messages, ...messages]);
         const { createdAt, text, user } = messages[0];    
 
-        axios.post('/addMessage', {
+        axios.post('/add-message', {
           createdAt,
           text,
           user

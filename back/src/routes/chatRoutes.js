@@ -8,6 +8,6 @@ const MessagesController = require('../controllers/chatController')
 
 app.get('/messages', MessagesController.getAllMessages );
 
-app.post('/addMessage', MessagesController.saveMessage );
+app.post('/add-message', MessagesController.saveMessage );
 
 module.exports = app;

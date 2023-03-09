@@ -6,6 +6,8 @@ app.use(bodyParser.json());
 
 const PhotoController = require('../controllers/photoController')
 
-app.post('/savePhoto', PhotoController.savePhoto);
+app.get('/posts', PhotoController.getPosts)
+
+app.post('/save-photo', PhotoController.savePhoto);
  
 module.exports = app;

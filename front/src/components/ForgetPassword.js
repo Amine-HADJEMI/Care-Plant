@@ -8,12 +8,17 @@ import {
 } from 'react-native'
 
 import axios from 'axios'
-
+import Port from '../utils/portServer'
 import Status from '../utils/status'
+import StyleApp from '../styles/styleApp'
+// import { useDispatch} from "react-redux";
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
+// const dispatch = useDispatch();
 export default class ForgetPassword extends React.Component {
+  
+
   state = {
     email: '',
     errorMessage: ''
@@ -44,6 +49,8 @@ export default class ForgetPassword extends React.Component {
         this.setState({ errorMessage: 'Utilisateur non existant' })
       }
       if(response.data.status === Status.MAIL_SENDED_SUCCESSFULLY){
+        // dispatch(forgetPasswordUserEmail({ emailUser: data.email }))        
+
         this.props.navigation.navigate('ChangePassword')
 
         console.log('todo navigate')
@@ -60,25 +67,23 @@ export default class ForgetPassword extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text
-          style={styles.putEmail}
-        >
+        <Text style={styles.putEmail} >
           Veuillez saisir votre adresse e-mail !
         </Text>
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Email'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('email', val)}
-        />
+        /> 
         <TouchableOpacity style={styles.signUpBtn} 
           onPress= {() => this.changePassword() }
         > 
-          <Text style={styles.loginText}>Suivant</Text> 
+        <Text style={styles.loginText}>Suivant</Text> 
         </TouchableOpacity>
 
-        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
+        <Text>{this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} </Text>
 
       </View>
     )
@@ -86,19 +91,6 @@ export default class ForgetPassword extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'white',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
