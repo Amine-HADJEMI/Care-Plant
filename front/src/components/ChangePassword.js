@@ -6,14 +6,24 @@ import {
   StyleSheet, 
   Text
 } from 'react-native'
-
+import Status from '../utils/status'
 import axios from 'axios'
+import Port from '../utils/portServer'
+import StyleApp from '../styles/styleApp'
+// import { useSelector } from 'react-redux';
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+
+axios.defaults.baseURL = Port.LOCALHOST_WEB
+
+// const userData = useSelector((state) => console.log(state));
 
 export default class ChangePassword extends React.Component {
   state = {
-    confimCode: '', newPassword: '', confirmPassword: ''
+    email:'m.hadjemi@epsi.fr', 
+    confirmCode: '', 
+    newPassword: '', 
+    confirmPassword: '',
+    errorMessage: '',
   }
   onChangeText = (key, val) => {
     this.setState({ [key]: val })
@@ -21,33 +31,42 @@ export default class ChangePassword extends React.Component {
  
   changePassword = () => {
     const data = {
-      confimCode : this.state.confimCode,      
+      email: this.state.email,
+      confirmCode : this.state.confirmCode,      
       newPassword: this.state.newPassword,
       confirmPassword: this.state.confirmPassword
     };
 
     console.log('ma data: ',data)
-    // axios.post('/changePassword', data)
-    // .then(response => {
-    //   console.log(response.data)
-    // })
-    // .catch(error => {
-    //   console.log(error)
-    // })
+    axios.post('/change-password', data)
+    .then(response => {
+
+      if(response.data.status === Status.UPDATE_PASSWORD_SUCCESSFULLY){
+        this.props.navigation.navigate('HomePage')
+        return 
+      }
+      else{
+        this.setState({ errorMessage: response.data.message })
+      }
+      console.log('test', this.state.errorMessage)
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 
   render() {
     return (
       <View style={styles.container}>
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Code récu par E-mail'
           autoCapitalize="none"
           placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('confimCode', val)}
+          onChangeText={val => this.onChangeText('confirmCode', val)}
         />
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Nouveau Mot de Passe'
           secureTextEntry={true}
           autoCapitalize="none"
@@ -55,7 +74,7 @@ export default class ChangePassword extends React.Component {
           onChangeText={val => this.onChangeText('newPassword', val)}
         />
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Confirmation du noveau mot de passe'
           secureTextEntry={true}
           autoCapitalize="none"
@@ -67,25 +86,15 @@ export default class ChangePassword extends React.Component {
         > 
           <Text style={styles.loginText} >Confirm</Text> 
         </TouchableOpacity>
+        
+        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
+
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'white',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -104,5 +113,8 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: "larger",
     fontWeight: "bold",
+  },
+  errorStyle: {
+    color: "red",
   }
 })

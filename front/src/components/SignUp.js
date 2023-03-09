@@ -9,8 +9,10 @@ import {
 
 import axios from 'axios'
 import Status from '../utils/status'
+import Port from '../utils/portServer'
+import StyleApp from '../styles/styleApp'
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 export default class SignUp extends React.Component {
   state = {
@@ -18,9 +20,6 @@ export default class SignUp extends React.Component {
     name: '',
     password: '',
     email: '',
-    // isIncomplete: false,
-    // invalidEmail: false,
-    // invalidPassword: false
     errorMessage: '',
   };
 
@@ -63,6 +62,7 @@ export default class SignUp extends React.Component {
       }
       if(response.data.status === Status.CREATE_USER){
         //TODO navigation to Login !
+        this.props.navigation.navigate('HomePage')
       }
     })
     .catch(error => {
@@ -74,28 +74,28 @@ export default class SignUp extends React.Component {
     return (
       <View style={styles.container}>
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Username'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('username', val)}
         />
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Name'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('name', val)}
         />
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Email'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('email', val)}
         />
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Password'
           secureTextEntry={true}
           autoCapitalize="none"
@@ -116,19 +116,6 @@ export default class SignUp extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'black',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
   TextInput: {
     borderRadius: 30,
     height: 50,

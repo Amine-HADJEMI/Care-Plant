@@ -49,7 +49,45 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS plant_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT
 )`);
 
+        // _id TEXT PRIMARY KEY,
+        // createdAt TEXT,
+        // text TEXT,
+        // user TEXT
 
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        text TEXT NOT NULL,
+        user TEXT NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`
+)
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS password_reset_codes (
+        email VARCHAR(255) NOT NULL,
+        code VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (email)
+    );`
+)
+
+// Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
+//     id INTEGER PRIMARY KEY,
+//     title TEXT NOT NULL,
+//     description TEXT NOT NULL,
+//     image BLOB,
+//     userName TEXT,
+//     createdAt DATETIME NOT NULL
+//   )`);
+
+Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image BLOB,
+  userName TEXT,
+  createdAt DATETIME NOT NULL
+)`);
 // // insert test data into the users table
 // let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;
 
