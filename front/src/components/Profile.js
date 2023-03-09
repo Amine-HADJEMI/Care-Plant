@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button , StyleSheet} from 'react-native';
 import { useSelector } from 'react-redux';
 
 const Profile = () => {
