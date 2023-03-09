@@ -12,6 +12,8 @@ import Port from '../utils/portServer'
 import StyleApp from '../styles/styleApp'
 import { useSelector } from 'react-redux';
 import * as FileSystem from 'expo-file-system';
+import Profile from "./Profile"
+
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB
 
@@ -93,6 +95,12 @@ const HomePage = () => {
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
+        <TouchableOpacity style={StyleApp.button}
+          onPress={() =>
+            navigation.navigate(Profile)
+          }> 
+          <Text style={styles.loginText}>Mon Profile</Text> 
+        </TouchableOpacity>
         <Text>YYYYYYYYOOOOOOOOOOOOOOOOO</Text>
           
           <TextInput

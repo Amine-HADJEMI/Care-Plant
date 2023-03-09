@@ -4,6 +4,7 @@ import { IconButton, MD3Colors } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import Port from '../utils/portServer'
+import Profile from "./Profile"
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB
 
@@ -49,7 +50,13 @@ export default function Home({navigation}) {
 
   return (
     <View style={styles.container}>
-      {selectedImage && <Image source={{ uri: selectedImage.uri }} style={styles.image} />}
+          <TouchableOpacity style={styles.mdpBtn}
+          onPress={() =>
+            navigation.navigate(Profile)
+          }> 
+          <Text style={styles.loginText}>Mon Profile</Text> 
+      </TouchableOpacity>
+      <Image source={require('../assets/arosa-je.png')} style={styles.logo} />
       {!selectedImage && (
         <>
           <Image source={require('../assets/arosa-je.png')} style={styles.logo} />

@@ -14,6 +14,7 @@ import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
 import TestPublication from './src/components/TestPublication'
 import TestHome from './src/components/TestHome'
+import Profile from './src/components/Profile'
 import ChatScreen from './src/components/Chat'
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
@@ -58,6 +59,10 @@ export default function App() {
             <Stack.Screen
               name="TestHome"
               component={TestHome}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
             />
             <Stack.Screen
               name="Chat"

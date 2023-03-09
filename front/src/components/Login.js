@@ -1,39 +1,28 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
-import Status from "../utils/status";
-import Port from "../utils/portServer"
-import { useDispatch} from "react-redux";
-import { connectUser } from '../store/store'
+
 import axios from "axios";
-// import io from 'socket.io-client';
 
 export default function Login({navigation}) {
 
-  const dispatch = useDispatch();
-
-  // const socket = io('http://localhost:3000');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [errorMessage, setErrorMessage] = useState(null);
 
 
-  axios.defaults.baseURL = Port.LOCALHOST_WEB
+  axios.defaults.baseURL = 'http://localhost:3000/'
 
   const loginSuccess = (email, password) => {    
     // console.log('ma data',{email, password})
-    navigation.navigate('TestHome')
     
     axios.post('/login', {email, password})
     .then(response => {
-      
-      if (response.data.status === Status.INVALID_EMAIL_OR_PASSWORD) {
+      if (response.data.status === 60) {
+        console.log('invalid email or password')
         setErrorMessage('invalid email or password')
-      } else if (response.data.status === Status.SUCCESS_AUTHENTIFICATION_USER) {
-        
-        dispatch(connectUser({ name: response.data.user.name, emailUser: response.data.user.email }))        
-
-        navigation.navigate('TestHome')
+      } else if (response.data.status === 50) {
+        navigation.navigate('Home')
 
         setErrorMessage(null)
       }

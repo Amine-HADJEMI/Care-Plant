@@ -6,6 +6,7 @@ import colors from '../styles/colors';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import Port from "../utils/portServer"
+import Profile from "./Profile"
 import { useSelector } from 'react-redux';
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB
@@ -78,6 +79,12 @@ const Home = () => {
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
+        <TouchableOpacity 
+          onPress={() =>
+            navigation.navigate('Profile')
+          }> 
+          <Text style={styles.loginText}>Mon Profile</Text> 
+        </TouchableOpacity>
           <Text>On est dans le good</Text>
           <TextInput
             placeholder="Titre"
