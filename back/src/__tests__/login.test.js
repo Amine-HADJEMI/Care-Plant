@@ -92,9 +92,9 @@ describe("loginUser", () => {
     it("devrait renvoyer une erreur si le mot de passe est incorrect", async () => {
       const response = await request(app)
         .post("/login")
-        .send({ email: "testuser@example.com", password: "mauvaismotdepasse" });
+        .send({ email: "johndoe@example.com", password: "mauvaismotdepasse" });
 
-      expect(response.status).toBe(200);
+      expect(response.statusCode).toBe(200);
       expect(response.body).toEqual({
         message: "Mot de passe incorrect",
         status: Status.INVALID_EMAIL_OR_PASSWORD,
@@ -102,9 +102,10 @@ describe("loginUser", () => {
     });
 
     test("renvoie une réponse réussie si l'authentification est réussie", async () => {
-      const response = await request(app)
-        .post("/login")
-        .send({ email: "testuser@example.com", password: "password123" });
+      const response = await request(app).post("/login").send({
+        email: "johndoe@example.com",
+        password: existingUser.password,
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toEqual({
