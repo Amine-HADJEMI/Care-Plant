@@ -18,6 +18,8 @@ const TestPublication = () => {
     const navigation = useNavigation();
     const [posts, setPosts] = useState([]);
     const [dialogVisible, setDialogVisible] = useState(false);
+    const [carePlant, setcarePlant] = useState(true);
+    const [confirmCare, setconfirmCare] = useState(false);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -39,6 +41,11 @@ const TestPublication = () => {
         fetchPosts();
     }, []);
 
+    const confirmationCare = () => {
+      setcarePlant(false)
+      setconfirmCare(true)
+    }
+
     const renderItem = ({ item }) => (
         <Card containerStyle={styles.card}>
             <View style={styles.userContainer}>
@@ -53,6 +60,7 @@ const TestPublication = () => {
             <View style={styles.footer}>
                 <Text style={styles.timestamp}>{item.createdAt.toLocaleString()}</Text>
                 {/* <FontAwesome name="comments-o" size={24} color={colors.blue} onPress={() => navigation.navigate('Comments', { postId: item.id })} /> */}
+                { carePlant &&
                 <TouchableOpacity
                     style={{
                       backgroundColor: 'green',
@@ -62,12 +70,50 @@ const TestPublication = () => {
                       alignItems: 'center',
                       justifyContent: 'center',
                     }}
-                    onPress={() => setDialogVisible(true)}
+                    onPress={() => confirmationCare()}
                 >
                   <FontAwesome name="heart" size={24} color="white" />
                   {/* <FontAwesomeIcon icon="fa-brands fa-pagelines" /> */}
                   <Text style={{ color: 'white' }}> J'en prends soin</Text>
                 </TouchableOpacity>
+                }
+                { confirmCare && 
+                  <>
+                    <View style={{flexDirection: 'row'}}>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: 'green',
+                          padding: 10,
+                          borderRadius: 5,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginRight: 10,
+                        }}
+                        onPress={() => confirmationCare()}
+                      >
+                        <FontAwesome name="check" size={24} color="white" />
+                        {/* <FontAwesomeIcon icon="fa-brands fa-pagelines" /> */}
+                        <Text style={{ color: 'white' }}> Oui Je confime</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: 'red',
+                          padding: 10,
+                          borderRadius: 5,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                        onPress={() => confirmationCare()}
+                      >
+                        <FontAwesome name="times" size={24} color="white" />
+                        {/* <FontAwesomeIcon icon="fa-brands fa-pagelines" /> */}
+                        <Text style={{ color: 'white' }}> Non</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </>      
+                }
             </View>
         </Card>
     );      
