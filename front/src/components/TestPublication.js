@@ -20,6 +20,7 @@ const TestPublication = () => {
     const [dialogVisible, setDialogVisible] = useState(false);
     const [carePlant, setcarePlant] = useState(true);
     const [confirmCare, setconfirmCare] = useState(false);
+    const [takenCarePosts, setTakenCarePosts] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -32,6 +33,7 @@ const TestPublication = () => {
                     image: post.image,
                     userName: post.userName,
                     createdAt: new Date(post.createdAt),
+                    carePlant: post.carePlant,
                 }));
                 setPosts(data);
             } catch (error) {
@@ -59,11 +61,10 @@ const TestPublication = () => {
             <Text style={styles.description}>{item.description}</Text>
             <View style={styles.footer}>
                 <Text style={styles.timestamp}>{item.createdAt.toLocaleString()}</Text>
-                {/* <FontAwesome name="comments-o" size={24} color={colors.blue} onPress={() => navigation.navigate('Comments', { postId: item.id })} /> */}
-                { carePlant &&
-                <TouchableOpacity
+                {carePlant && (
+                  <TouchableOpacity
                     style={{
-                      backgroundColor: 'green',
+                      backgroundColor: !posts.carePlant ? 'gray' : 'green',
                       padding: 10,
                       borderRadius: 5,
                       flexDirection: 'row',
@@ -71,12 +72,14 @@ const TestPublication = () => {
                       justifyContent: 'center',
                     }}
                     onPress={() => confirmationCare()}
-                >
-                  <FontAwesome name="heart" size={24} color="white" />
-                  {/* <FontAwesomeIcon icon="fa-brands fa-pagelines" /> */}
-                  <Text style={{ color: 'white' }}> J'en prends soin</Text>
-                </TouchableOpacity>
-                }
+                    disabled={posts.carePlant}
+                  >
+                    <FontAwesome name={!posts.carePlant ? "ban" : "heart"} size={24} color="white" />
+                    <Text style={{ color: 'white' }}>
+                      {!posts.carePlant ? " La plante est déjà prise" : " J'en prends soin"}
+                    </Text>
+                  </TouchableOpacity>
+                )}
                 { confirmCare && 
                   <>
                     <View style={{flexDirection: 'row'}}>

@@ -22,7 +22,7 @@ export default function Login({navigation}) {
 
   const loginSuccess = (email, password) => {    
     // console.log('ma data',{email, password})
-    // navigation.navigate('TestHome')
+    navigation.navigate('TestHome')
     
     axios.post('/login', {email, password})
     .then(response => {

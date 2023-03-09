@@ -81,12 +81,13 @@ Database.db.run(`
 //   )`);
 
 Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
-  id INTEGER PRIMARY KEY,
-  title TEXT NOT NULL,
-  description TEXT NOT NULL,
-  image BLOB,
-  userName TEXT,
-  createdAt DATETIME NOT NULL
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image BLOB,
+    userName TEXT,
+    createdAt DATETIME NOT NULL,
+    carePlant INTEGER NOT NULL DEFAULT 0 CHECK (carePlant IN (0, 1))
 )`);
 // // insert test data into the users table
 // let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;

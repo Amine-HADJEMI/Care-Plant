@@ -11,6 +11,7 @@ const getPosts = (req, res) => {
       console.error(err);
       res.status(500).send('Erreur lors de la récupération des publications');
     } else {
+      
       const data = rows.map((post) => ({
         id: post.id,
         title: post.title,
@@ -18,6 +19,7 @@ const getPosts = (req, res) => {
         image: post.image,
         userName: post.userName,
         createdAt: new Date(post.createdAt),
+        carePlant: (post.carePlant === 0 ? false : true),
       }));
       res.send(data);
     }
@@ -25,13 +27,15 @@ const getPosts = (req, res) => {
 }
 
 const savePhoto = (req, res) => {
-  const { title, description, image, userName, createdAt } = req.body;
+  const { title, description, image, userName, createdAt, carePlant } = req.body;
 
-  // insérer la nouvelle publication dans votre base de données
+  const carePlantBool = carePlant ? 1 : 0; // 1 si vrai, 0 si faux
+
   db.run(
-    `INSERT INTO posts (title, description, image, userName, createdAt)
-    VALUES (?, ?, ?, ?, ?)`,
-    [title, description, image, userName, createdAt],
+    `INSERT INTO posts (title, description, image, userName, createdAt, carePlant)
+    VALUES (?, ?, ?, ?, ?, ?)`,
+
+    [title, description, image, userName, createdAt, carePlantBool],
     function(err) {
       if (err) {
         console.error(err);
