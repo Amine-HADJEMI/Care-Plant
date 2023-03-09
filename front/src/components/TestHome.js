@@ -1,45 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { View, TouchableOpacity, Text, Image, StyleSheet, TextInput, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { FontAwesome, Entypo } from '@expo/vector-icons';
 import colors from '../styles/colors';
-// import { collection, addDoc } from "firebase/firestore";
-// import { database } from "../config/firebase";
+import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
-import axios from "axios";
-import Port from '../utils/portServer'
-import StyleApp from '../styles/styleApp'
+import Port from "../utils/portServer"
 import { useSelector } from 'react-redux';
-import * as FileSystem from 'expo-file-system';
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB
 
-
-
-
-const HomePage = () => {
-
-  const userConnect = useSelector((state) => console.log(state))
+const Home = () => {
+    const userData = useSelector((state) => state.user);
+    
+    const navigation = useNavigation();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [image, setImage] = useState(null);
   
-  const navigation = useNavigation();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    navigation.setOptions({
-      title: "Fil d'actualité",
-      headerLeft: () => (
-        <FontAwesome
-          name="search"
-          size={24}
-          color={colors.gray}
-          style={{ marginLeft: 15 }}
-        />
-      ),
-    });
-  }, [navigation]);
+    useEffect(() => {
+      navigation.setOptions({
+        title: "Fil d'actualité",
+        headerLeft: () => (
+          <FontAwesome
+            name="search"
+            size={24}
+            color={colors.gray}
+            style={{ marginLeft: 15 }}
+          />
+        ),
+      });
+    }, [navigation]);
   
     const handleChoosePhoto = async () => {
       const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -50,7 +41,7 @@ const HomePage = () => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [500, 30],
+        aspect: [4, 3],
         quality: 1,
       });
   
@@ -66,25 +57,19 @@ const HomePage = () => {
       }
   
       try {
-        // const docRef = await addDoc(collection(database, "posts"), {
-        //   title,
-        //   description,
-        //   image,
-        //   createdAt: new Date(),   
-        // });
-        // console.log("Document écrit avec ID: ", docRef.id);
-        axios.post('/save-photo', {title, description, image})
-        .then(response => {
-          console.log('reponse',response.data);
-        })
-        .catch(error => {
-          console.log(error.response.data.message);
-        }); 
-
+        const response = await axios.post('/save-photo', {
+          title,
+          description,
+          image,
+          userName: userData.name,
+          createdAt: new Date(),
+          
+        });
+        console.log("Document écrit avec ID: ", response.data.id);
         setTitle("");
         setDescription("");
         setImage(null);
-        // navigation.navigate("Publication");
+        navigation.navigate("TestPublication");
       } catch (e) {
         console.error("Erreur ajout du document : ", e);
       }
@@ -93,8 +78,7 @@ const HomePage = () => {
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-        <Text>YYYYYYYYOOOOOOOOOOOOOOOOO</Text>
-          
+          <Text>On est dans le good</Text>
           <TextInput
             placeholder="Titre"
             style={styles.input}
@@ -125,7 +109,7 @@ const HomePage = () => {
           <Entypo name="chat" size={24} color={colors.green} />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Publication")}
+          onPress={() => navigation.navigate("TestPublication")}
           style={styles.publicationButton}
         >
           <Entypo name="new-message" size={24} color={colors.green} />
@@ -134,9 +118,10 @@ const HomePage = () => {
     );
   };
   
-  export default HomePage;
+  export default Home;
 
-const styles = StyleSheet.create({
+
+  const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.white,

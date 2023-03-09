@@ -6,7 +6,8 @@ const db = Database.db
 
 async function getAllMessages(req, res) {
   try {
-    const rows = await new Promise((resolve, reject) => {
+    const rows = await new Promise((resolve, reject) => {y
+      
       db.all('SELECT * FROM messages ORDER BY createdAt DESC', (err, rows) => {
         if (err) {
           reject(err);

@@ -1,27 +1,51 @@
 const Database = require("../models/database");
 const sqlite3 = require("sqlite3");
 
+const Status = require("../utils/status")
+
+const db = Database.db
+
+const getPosts = (req, res) => {
+  db.all('SELECT * FROM posts', (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send('Erreur lors de la récupération des publications');
+    } else {
+      const data = rows.map((post) => ({
+        id: post.id,
+        title: post.title,
+        description: post.description,
+        image: post.image,
+        userName: post.userName,
+        createdAt: new Date(post.createdAt),
+      }));
+      res.send(data);
+    }
+  });
+}
+
 const savePhoto = (req, res) => {
-  // const plantId = req.body.plantId;
-  try{
-    const photo = req.body;
-    console.log(photo)
-  } catch(e){
-    console.log(e)
-  }
+  const { title, description, image, userName, createdAt } = req.body;
 
-  // Insert new photo into the photos table
-    // const sqlite3 = `INSERT INTO photos(plant_id, photo_path) VALUES(?,?)`;
-    // Database.db.run(sqlite3, [plantId, photo], function(err) {
-    //   if (err) {
-    //     console.error(err.message);
-    //     return res.status(500).send({ error: 'Unable to save photo' });
-    //   }
-    //   console.log(`Photo has been saved with id ${this.lastID}`);
-
-    //   return res.status(200).send({ success: 'Photo saved successfully' });
-    // });
+  // insérer la nouvelle publication dans votre base de données
+  db.run(
+    `INSERT INTO posts (title, description, image, userName, createdAt)
+    VALUES (?, ?, ?, ?, ?)`,
+    [title, description, image, userName, createdAt],
+    function(err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Erreur lors de l\'enregistrement de la publication');
+      } else {
+        console.log(`Publication enregistrée avec l'ID ${this.lastID}`);
+        res.send({ id: this.lastID });
+      }
+    }
+  );
 };
 
-module.exports = { savePhoto };
+module.exports = { 
+  savePhoto,
+  getPosts 
+};
 

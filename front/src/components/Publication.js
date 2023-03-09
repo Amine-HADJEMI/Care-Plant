@@ -6,8 +6,9 @@ import colors from '../styles/colors';
 // import { collection, getDocs, orderBy, query } from "firebase/firestore";
 // import { database } from "../config/firebase";
 import axios from "axios";
+import Port from '../utils/portServer'
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 
 const Publication = () => {

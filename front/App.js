@@ -12,16 +12,18 @@ import ForgetPassword from './src/components/ForgetPassword';
 import ChangePassword from './src/components/ChangePassword';
 import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
-import Publication from './src/components/Publication'
-import HomePage from './src/components/HomePage'
+import TestPublication from './src/components/TestPublication'
+import TestHome from './src/components/TestHome'
 import ChatScreen from './src/components/Chat'
+import { Provider } from 'react-redux';
+import { store } from './src/store/store';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    // <Provider store={store}>
-      // <SafeAreaProvider>
+    <Provider store={store}>
+      {/* // <SafeAreaProvider> */}
        <NavigationContainer>
           <Stack.Navigator>
           <Stack.Screen
@@ -50,12 +52,12 @@ export default function App() {
               component={CameraApp}
             />
             <Stack.Screen
-              name="Publication"
-              component={Publication}
+              name="TestPublication"
+              component={TestPublication}
             />
             <Stack.Screen
-              name="HomePage"
-              component={HomePage}
+              name="TestHome"
+              component={TestHome}
             />
             <Stack.Screen
               name="Chat"
@@ -63,8 +65,8 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
-      // </SafeAreaProvider>
-    // {/* </Provider> */}
+      {/* // </SafeAreaProvider> */}
+    </Provider>
   );
 }
 
