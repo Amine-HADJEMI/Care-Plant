@@ -3,8 +3,6 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from "react
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from '@expo/vector-icons';
 import { Card, Divider } from 'react-native-elements';
-import { Dialog } from 'react-native-dialog';
-import colors from '../styles/colors';
 import axios from 'axios';
 import Port from "../utils/portServer"
 import Icon from 'react-native-vector-icons/FontAwesome';
