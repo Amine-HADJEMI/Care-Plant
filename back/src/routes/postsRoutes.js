@@ -4,13 +4,13 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 
-const PhotoController = require('../controllers/photoController')
+const PostsController = require('../controllers/postsController')
 
-app.get('/posts', PhotoController.getPosts)
+app.get('/posts', PostsController.getPosts)
 
-app.post('/save-photo', PhotoController.savePhoto);
+app.post('/save-photo', PostsController.savePhoto);
 
-app.put('/care-plant-post', PhotoController.carePlant);
+app.put('/care-plant-post', PostsController.carePlant);
 
  
 module.exports = app;
