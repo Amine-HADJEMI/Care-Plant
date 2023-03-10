@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   TouchableOpacity,
   TextInput,
-  StyleSheet, 
   Text
 } from 'react-native'
 
@@ -11,6 +10,7 @@ import axios from 'axios'
 import Status from '../utils/status'
 import Port from '../utils/portServer'
 import StyleApp from '../styles/styleApp'
+import styles from '../styles/signUpStyle';
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB
 
@@ -61,12 +61,11 @@ export default class SignUp extends React.Component {
         this.setState({ errorMessage: 'Utilisateur déja existant' })
       }
       if(response.data.status === Status.CREATE_USER){
-        //TODO navigation to Login !
-        this.props.navigation.navigate('HomePage')
+        this.props.navigation.navigate('Home')
       }
     })
     .catch(error => {
-      console.log('eeeeeroooooor', error)
+      console.log( error)
     })
   }
 
@@ -114,48 +113,3 @@ export default class SignUp extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  TextInput: {
-    borderRadius: 30,
-    height: 50,
-    flex: 1,
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  signUpBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#66D163",
-    maxWidth: 500,
-  },
-  loginText: {
-    fontSize: "larger",
-    fontWeight: "bold",
-  },
-  inputView: {
-    backgroundColor: "#A1E79F",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
-    maxWidth: 400,
-  },
-  errorStyle: {
-    color: 'red',
-    paddingTop: '2%'
-  }
-})

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button } from 'react-native';
 import { useSelector } from 'react-redux';
+import styles from '../styles/profileStyle';
 
 const Profile = () => {
 
@@ -54,18 +55,5 @@ const Profile = () => {
       </View>
     );
   };
-  const styles = StyleSheet.create({
-    TextInput: {
-      borderRadius: 30,
-      height: 50,
-      flex: 1,
-      padding: 5,
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      width: "100%",
-    }
-   
-  });
   
   export default Profile;

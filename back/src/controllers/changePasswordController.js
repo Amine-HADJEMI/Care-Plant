@@ -3,7 +3,6 @@ const nodemailer = require('nodemailer');
 const Database = require("../models/database");
 const db = Database.db
 const randomstring = require('randomstring');
-const functionsUtils = require('../utils/functions')
 const Status = require("../utils/status")
 const bcrypt = require("bcrypt");
 
@@ -94,8 +93,9 @@ async function sendConfirmationEmail(req, res){
       } else {
         console.log('E-mail envoyé : ' + info.response);
 
-        const existingRow = db.prepare('SELECT * FROM password_reset_codes WHERE email = ?').get(userEmail);
-
+        const existingRows = db.all('SELECT * FROM password_reset_codes WHERE email = ?', userEmail);
+        const existingRow = existingRows[0];
+        
         if (existingRow) {
           // Si une ligne avec cet e-mail existe déjà, mettre à jour le code correspondant
           db.prepare('UPDATE password_reset_codes SET code = ? WHERE email = ?').run(verificationCode, userEmail);
