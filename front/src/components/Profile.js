@@ -18,19 +18,28 @@ const Profile = () => {
     };
   
     const changePassword = () => {
-        if (password) {
-          const pwd = {
-            text: inputText
-          };
-          axios.post(`/XXXXXX`, pwd)
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        }
+      const data = {
+        email: emailUser,
+        confirmCode,
+        newPassword,
+        confirmPassword
       };
+  
+      console.log('ma data: ',data)
+      axios.post('/change-password', data)
+        .then(response => {
+          if (response.data.status === Status.UPDATE_PASSWORD_SUCCESSFULLY) {
+            navigation.navigate('Home')
+            return 
+          } else {
+            setErrorMessage(response.data.message)
+          }
+          console.log('test', errorMessage)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
 
     return (
       <View>
