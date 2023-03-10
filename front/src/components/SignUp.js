@@ -1,16 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   TouchableOpacity,
   TextInput,
-  StyleSheet, 
   Text
 } from 'react-native'
 
 import axios from 'axios'
 import Status from '../utils/status'
+import Port from '../utils/portServer'
+import StyleApp from '../styles/styleApp'
+import styles from '../styles/signUpStyle';
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 export default class SignUp extends React.Component {
   state = {
@@ -18,9 +20,6 @@ export default class SignUp extends React.Component {
     name: '',
     password: '',
     email: '',
-    // isIncomplete: false,
-    // invalidEmail: false,
-    // invalidPassword: false
     errorMessage: '',
   };
 
@@ -62,11 +61,11 @@ export default class SignUp extends React.Component {
         this.setState({ errorMessage: 'Utilisateur déja existant' })
       }
       if(response.data.status === Status.CREATE_USER){
-        //TODO navigation to Login !
+        this.props.navigation.navigate('Home')
       }
     })
     .catch(error => {
-      console.log('eeeeeroooooor', error)
+      console.log( error)
     })
   }
 
@@ -74,29 +73,29 @@ export default class SignUp extends React.Component {
     return (
       <View style={styles.container}>
         <TextInput
-          style={styles.input}
+          style={StyleApp.input}
           placeholder='Username'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('username', val)}
         />
         <TextInput
-          style={styles.input}
-          placeholder='Name'
+          style={StyleApp.input}
+          placeholder='Nom & Prénom'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('name', val)}
         />
         <TextInput
-          style={styles.input}
-          placeholder='Email'
+          style={StyleApp.input}
+          placeholder='E-mail'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('email', val)}
         />
         <TextInput
-          style={styles.input}
-          placeholder='Password'
+          style={StyleApp.input}
+          placeholder='Mot de passe'
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
@@ -106,7 +105,7 @@ export default class SignUp extends React.Component {
         <TouchableOpacity style={styles.signUpBtn} 
           onPress= {() => this.createUser()}
         > 
-          <Text style={styles.loginText} >Sign Up</Text> 
+          <Text style={styles.loginText} >Inscription</Text> 
         </TouchableOpacity>
 
         {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
@@ -114,61 +113,3 @@ export default class SignUp extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'black',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
-  TextInput: {
-    borderRadius: 30,
-    height: 50,
-    flex: 1,
-    padding: 5,
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    width: "100%",
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  signUpBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#66D163",
-    maxWidth: 500,
-  },
-  loginText: {
-    fontSize: "larger",
-    fontWeight: "bold",
-  },
-  inputView: {
-    backgroundColor: "#A1E79F",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
-    alignItems: "center",
-    maxWidth: 400,
-  },
-  errorStyle: {
-    color: 'red',
-    paddingTop: '2%'
-  }
-})

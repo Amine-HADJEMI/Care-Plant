@@ -13,7 +13,6 @@ Database.db = new sqlite3.Database(
 });
 
 
-// Create users table
 Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     userName TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -21,57 +20,34 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL
 )`);
 
-// Create plants table
-Database.db.run(`CREATE TABLE IF NOT EXISTS plants (
-    userName TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    description TEXT NOT NULL
+
+
+
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS messages (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        text TEXT NOT NULL,
+        user TEXT NOT NULL,
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`
+)
+Database.db.run(`
+    CREATE TABLE IF NOT EXISTS password_reset_codes (
+        email VARCHAR(255) NOT NULL,
+        code VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (email)
+    );`
+)
+
+Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    image BLOB,
+    userName TEXT,
+    createdAt DATETIME NOT NULL,
+    carePlant INTEGER NOT NULL DEFAULT 0 CHECK (carePlant IN (0, 1))
 )`);
-
-// Create photos table
-Database.db.run(`CREATE TABLE IF NOT EXISTS photos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    plant_id INTEGER NOT NULL,
-    photo BLOB,
-    FOREIGN KEY (plant_id) REFERENCES plants(id)
-)`);
-
-// Create tips table
-Database.db.run(`CREATE TABLE IF NOT EXISTS tips (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    plant_id INTEGER NOT NULL,
-    tip TEXT NOT NULL,
-    FOREIGN KEY (plant_id) REFERENCES plants(id)
-)`);
-
-// Create plant_user table
-Database.db.run(`CREATE TABLE IF NOT EXISTS plant_user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT
-)`);
-
-
-// // insert test data into the users table
-// let sql = `INSERT INTO users(userName, name, email, password) VALUES(?,?,?,?)`;
-
-// Database.db.run(sql, ["JDoe", "John Doe", "johndoe@example.com", "password1"], (err) => {
-//   if (err) {
-//     console.error(err.message);
-//   }
-//   console.log(`Row has been inserted with rowid ${this.lastID}`);
-// });
-
-// Database.db.run(sql, ["JSmith", "Jane Smith", "janesmith@example.com", "password2"], (err) => {
-//   if (err) {
-//     console.error(err.message);
-//   }
-//   console.log(`Row has been inserted with rowid ${this.lastID}`);
-// });
-
-// Database.db.run(sql, ["BJohnson","Bob Johnson", "bobjohnson@example.com", "password3"], (err) => {
-//   if (err) {
-//     console.error(err.message);
-//   }
-//   console.log(`Row has been inserted with rowid ${this.lastID}`);
-// });
 
 module.exports = Database;
