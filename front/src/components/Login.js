@@ -24,7 +24,6 @@ export default function Login({navigation}) {
   axios.defaults.baseURL = Port.LOCALHOST_WEB
 
   const loginSuccess = (email, password) => {    
-    navigation.navigate('Home')
     
     axios.post('/login', {email, password})
     .then(response => {
