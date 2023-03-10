@@ -82,21 +82,21 @@ export default class SignUp extends React.Component {
         />
         <TextInput
           style={StyleApp.input}
-          placeholder='Name'
+          placeholder='Nom & Prénom'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('name', val)}
         />
         <TextInput
           style={StyleApp.input}
-          placeholder='Email'
+          placeholder='E-mail'
           autoCapitalize="none"
           placeholderTextColor='white'
           onChangeText={val => this.onChangeText('email', val)}
         />
         <TextInput
           style={StyleApp.input}
-          placeholder='Password'
+          placeholder='Mot de passe'
           secureTextEntry={true}
           autoCapitalize="none"
           placeholderTextColor='white'
@@ -106,7 +106,7 @@ export default class SignUp extends React.Component {
         <TouchableOpacity style={styles.signUpBtn} 
           onPress= {() => this.createUser()}
         > 
-          <Text style={styles.loginText} >Sign Up</Text> 
+          <Text style={styles.loginText} >Inscription</Text> 
         </TouchableOpacity>
 
         {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
