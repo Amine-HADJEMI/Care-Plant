@@ -3,7 +3,7 @@ const app = express();
 const userRoutes = require("./routes/userRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 const changePasswordRoutes = require("./routes/changePasswordRoutes");
-const photoRoutes = require("./routes/photoRoutes")
+const postsRoutes = require("./routes/postsRoutes")
 const chatRoutes = require("./routes/chatRoutes")
 // const server = require('http').createServer(app);
 
@@ -16,7 +16,7 @@ app.use(cors());
 app.use("/", userRoutes);
 app.use("/", loginRoutes);
 app.use("/", changePasswordRoutes);
-app.use("/", photoRoutes);
+app.use("/", postsRoutes);
 app.use("/", chatRoutes);
 
 

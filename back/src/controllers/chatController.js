@@ -6,7 +6,7 @@ const db = Database.db
 
 async function getAllMessages(req, res) {
   try {
-    const rows = await new Promise((resolve, reject) => {y
+    const rows = await new Promise((resolve, reject) => {
       
       db.all('SELECT * FROM messages ORDER BY createdAt DESC', (err, rows) => {
         if (err) {
@@ -21,6 +21,30 @@ async function getAllMessages(req, res) {
     res.status(500).send(err);
   }
 }
+// const server = require('http').createServer();
+// const io = require('socket.io')(server, {
+//   cors: {
+//     origin: '*',
+//   },
+// });
+
+// io.on('connection', (socket) => {
+//   console.log('a user connected');
+
+//   socket.on('new message', (message) => {
+//     console.log('new message', message);
+//     io.emit('new message', message);
+//   });
+
+//   socket.on('disconnect', () => {
+//     console.log('user disconnected');
+//   });
+// });
+
+// const port = process.env.PORT || 3000;
+// server.listen(port, () => {
+//   console.log(`Server listening on port ${port}`);
+// });
 
 async function saveMessage(req, res) {
   const {  createdAt, text, user } = req.body;

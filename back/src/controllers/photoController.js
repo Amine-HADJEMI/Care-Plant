@@ -48,8 +48,26 @@ const savePhoto = (req, res) => {
   );
 };
 
+const carePlant = (req, res) => {
+  const postId  = req.body.id;
+  db.run(
+    `UPDATE posts SET carePlant = 1 WHERE id = ?`,
+    [postId],
+    function(err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Erreur lors de la mise à jour de la publication');
+      } else {
+        res.send({ message: 'Publication mise à jour avec succès' });
+      }
+    }
+  );
+};
+
+
 module.exports = { 
   savePhoto,
-  getPosts 
+  getPosts,
+  carePlant
 };
 

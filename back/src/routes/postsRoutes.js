@@ -9,5 +9,8 @@ const PhotoController = require('../controllers/photoController')
 app.get('/posts', PhotoController.getPosts)
 
 app.post('/save-photo', PhotoController.savePhoto);
+
+app.put('/care-plant-post', PhotoController.carePlant);
+
  
 module.exports = app;
