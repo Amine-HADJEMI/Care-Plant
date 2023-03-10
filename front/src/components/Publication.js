@@ -14,8 +14,6 @@ const Publication = () => {
   const [confirmCare, setconfirmCare] = useState(false);
   const [takenCarePosts, setTakenCarePosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [selectedPosts, setSelectedPosts] = useState([]);
-
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -43,7 +41,6 @@ const Publication = () => {
 
   const updateDataPage = (postId) => {
     setSelectedPost(postId);
-    setSelectedPosts([...selectedPosts, postId]);
     setconfirmCare(true);
   };
 
@@ -75,7 +72,7 @@ const Publication = () => {
         <View style={styles.footer}>
           <Text style={styles.timestamp}>{item.createdAt.toLocaleString()}</Text>
   
-          {!item.carePlant && !isTakenCare && !confirmCare ? (
+          {(!item.carePlant && !isTakenCare) && !(selectedPost === item.id) && (
             <TouchableOpacity
               style={{
                 backgroundColor: 'green',
@@ -90,9 +87,9 @@ const Publication = () => {
               <FontAwesome name="heart" size={24} color="white" />
               <Text style={{ color: 'white' }}> J'en prends soin</Text>
             </TouchableOpacity>
-          ) : null}
+          )}
   
-          {!item.carePlant && selectedPost === item.id && confirmCare ? (
+          {(!item.carePlant && selectedPost === item.id && confirmCare) && (
             <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity
                 style={{
@@ -124,11 +121,11 @@ const Publication = () => {
                 <Text style={{ color: 'white' }}> Non</Text>
               </TouchableOpacity>
             </View>
-          ) : null}
+          )}
   
-          {isTakenCare ? (
+          {isTakenCare && (
             <TouchableOpacity
-              disabled={true}
+              disabled={true}  
               style={{
                 backgroundColor: 'gray',
                 padding: 10,
@@ -141,7 +138,7 @@ const Publication = () => {
               <FontAwesome name="ban" size={24} color="white" />
               <Text style={{ color: 'white' }}> La plante est déjà prise</Text>
             </TouchableOpacity>
-          ) : null}
+          )}
         </View>
       </Card>
     );
