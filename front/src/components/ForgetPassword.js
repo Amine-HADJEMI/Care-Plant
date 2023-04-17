@@ -1,129 +1,63 @@
-import React from 'react'
-import {
-  View,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet, 
-  Text
-} from 'react-native'
+import React, { useState } from 'react';
+import { View, TouchableOpacity, TextInput, Text } from 'react-native';
+import axios from 'axios';
+import Port from '../utils/portServer';
+import Status from '../utils/status';
+import StyleApp from '../styles/styleApp';
+import { useDispatch } from 'react-redux';
+import { forgetPasswordUserEmail } from '../store/store';
+import styles from '../styles/forgetPasswordStyle';
 
-import axios from 'axios'
+axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
-import Status from '../utils/status'
+export default function ForgetPassword({ navigation }) {
+  const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+  const dispatch = useDispatch();
 
-export default class ForgetPassword extends React.Component {
-  state = {
-    email: '',
-    errorMessage: ''
-  }
-  
-  onChangeText = (key, val) => {
-    this.setState({ [key]: val })
-  }
-
-  changePassword = () => {
+  const changePassword = () => {
     const data = {
-      email: this.state.email,
+      email: email,
     };
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    console.log('votre adresse mail est',data.email)
-    
-    if (!emailRegex.test(data.email) ) {
-      this.setState({ errorMessage: 'Le format de l\'email est invalide' });
-      return
-    }  
+    if (!emailRegex.test(data.email)) {
+      setErrorMessage("Le format de l'email est invalide");
+      return;
+    }
 
-    axios.post('/send-confirmation-email', { email: data.email })
-    .then(response => {
-      console.log('is True avant', this.state.invalidEmail)
-      if(response.data.status === Status.UNKNOWN_USER){
-        this.setState({ errorMessage: 'Utilisateur non existant' })
-      }
-      if(response.data.status === Status.MAIL_SENDED_SUCCESSFULLY){
-        this.props.navigation.navigate('ChangePassword')
+    axios
+      .post('/send-confirmation-email', { email: data.email })
+      .then((response) => {
+        if (response.data.status === Status.UNKNOWN_USER) {
+          setErrorMessage('Utilisateur non existant');
+        } else if (response.data.status === Status.MAIL_SENDED_SUCCESSFULLY) {
+          dispatch(forgetPasswordUserEmail({ emailUser: data.email }));
+          navigation.navigate('ChangePassword');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-        console.log('todo navigate')
-      }
-      console.log('is True apres', this.state.invalidEmail)
+  return (
+    <View style={styles.container}>
+      <Text style={styles.putEmail}>Veuillez saisir votre adresse e-mail !</Text>
+      <TextInput
+        style={StyleApp.input}
+        placeholder="Email"
+        autoCapitalize="none"
+        placeholderTextColor="white"
+        onChangeText={(val) => setEmail(val)}
+      />
+      <TouchableOpacity style={styles.signUpBtn} onPress={() => changePassword()}>
+        <Text style={styles.loginText}>Suivant</Text>
+      </TouchableOpacity>
 
-      console.log(response.data)
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text
-          style={styles.putEmail}
-        >
-          Veuillez saisir votre adresse e-mail !
-        </Text>
-        <TextInput
-          style={styles.input}
-          placeholder='Email'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('email', val)}
-        />
-        <TouchableOpacity style={styles.signUpBtn} 
-          onPress= {() => this.changePassword() }
-        > 
-          <Text style={styles.loginText}>Suivant</Text> 
-        </TouchableOpacity>
-
-        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>} 
-
-      </View>
-    )
-  }
+      <Text>{errorMessage && <Text style={styles.errorStyle}>{errorMessage}</Text>} </Text>
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'white',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  signUpBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#66D163",
-    maxWidth: 500,
-  },
-  loginText: {
-    fontSize: "larger",
-    fontWeight: "bold",
-  },
-  putEmail: {
-    fontSize: 'larger',
-    fontWeight: "bold",
-    margin: 60  , 
-  },
-  errorStyle: {
-    color: "red",
-  }
-})

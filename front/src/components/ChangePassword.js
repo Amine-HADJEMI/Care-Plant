@@ -1,108 +1,85 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View, 
   TouchableOpacity,
   TextInput,
-  StyleSheet, 
   Text
 } from 'react-native'
-
+import Status from '../utils/status'
 import axios from 'axios'
+import Port from '../utils/portServer'
+import StyleApp from '../styles/styleApp'
+import styles from '../styles/changePasswordStyle';
+import { useSelector } from 'react-redux';
 
-axios.defaults.baseURL = 'http://localhost:3000/'
+axios.defaults.baseURL = Port.LOCALHOST_WEB
 
-export default class ChangePassword extends React.Component {
-  state = {
-    confimCode: '', newPassword: '', confirmPassword: ''
-  }
-  onChangeText = (key, val) => {
-    this.setState({ [key]: val })
-  }
- 
-  changePassword = () => {
+const ChangePassword = ({ navigation }) => {
+  const emailUser = useSelector((state) => state.forgetPassword.emailUser);
+
+  const [confirmCode, setConfirmCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const changePassword = () => {
     const data = {
-      confimCode : this.state.confimCode,      
-      newPassword: this.state.newPassword,
-      confirmPassword: this.state.confirmPassword
+      email: emailUser,
+      confirmCode,
+      newPassword,
+      confirmPassword
     };
 
     console.log('ma data: ',data)
-    // axios.post('/changePassword', data)
-    // .then(response => {
-    //   console.log(response.data)
-    // })
-    // .catch(error => {
-    //   console.log(error)
-    // })
+    axios.post('/change-password', data)
+      .then(response => {
+        if (response.data.status === Status.UPDATE_PASSWORD_SUCCESSFULLY) {
+          navigation.navigate('Home')
+          return 
+        } else {
+          setErrorMessage(response.data.message)
+        }
+        console.log('test', errorMessage)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          placeholder='Code récu par E-mail'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('confimCode', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Nouveau Mot de Passe'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('newPassword', val)}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Confirmation du noveau mot de passe'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('confirmPassword', val)}
-        />
-        <TouchableOpacity style={styles.signUpBtn} 
-          onPress= {() => this.changePassword()}
-        > 
-          <Text style={styles.loginText} >Confirm</Text> 
-        </TouchableOpacity>
-      </View>
-    )
-  }
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={StyleApp.input}
+        placeholder='Code récu par E-mail'
+        autoCapitalize="none"
+        placeholderTextColor='white'
+        onChangeText={val => setConfirmCode(val)}
+      />
+      <TextInput
+        style={StyleApp.input}
+        placeholder='Nouveau Mot de Passe'
+        secureTextEntry={true}
+        autoCapitalize="none"
+        placeholderTextColor='white'
+        onChangeText={val => setNewPassword(val)}
+      />
+      <TextInput
+        style={StyleApp.input}
+        placeholder='Confirmation du noveau mot de passe'
+        secureTextEntry={true}
+        autoCapitalize="none"
+        placeholderTextColor='white'
+        onChangeText={val => setConfirmPassword(val)}
+      />
+      <TouchableOpacity style={styles.signUpBtn} 
+        onPress={changePassword}
+      > 
+        <Text style={styles.loginText}>Confirm</Text> 
+      </TouchableOpacity>
+      
+      {errorMessage && <Text style={styles.errorStyle}>{errorMessage}</Text>} 
+    </View>
+  )
 }
 
-const styles = StyleSheet.create({
-  input: {
-    width: 350,
-    height: 55,
-    backgroundColor: '#A1E79F',
-    margin: 10,
-    padding: 8,
-    color: 'white',
-    borderRadius: 14,
-    fontSize: 18,
-    fontWeight: '500',
-    width: "80%",
-    maxWidth: 500,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  signUpBtn: {
-    width: "80%",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    backgroundColor: "#66D163",
-    maxWidth: 500,
-  },
-  loginText: {
-    fontSize: "larger",
-    fontWeight: "bold",
-  }
-})
+export default ChangePassword;
