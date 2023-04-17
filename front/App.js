@@ -1,39 +1,63 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
+import { StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Login from './login';
-import Signup from './signup';
-import Home from './Home';
-import CameraApp from './CameraApp';
+import Login from './src/components/Login';
+import Signup from './src/components/SignUp';
+import ForgetPassword from './src/components/ForgetPassword';
+import ChangePassword from './src/components/ChangePassword';
+import Home from './src/components/Home';
+import CameraApp from './src/components/CameraApp';
+import Publication from './src/components/Publication'
+import ChatScreen from './src/components/Chat'
+import { Provider } from 'react-redux';
+import { store } from './src/store/store';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-
-     <NavigationContainer>
-        <Stack.Navigator>
-        <Stack.Screen
-            name="Login"
-            component={Login}
-          />
-        <Stack.Screen
-            name="Signup"
-            component={Signup}
-          />
-        <Stack.Screen
-            options={{headerShown: true}}
-            name="Home"
-            component={Home}
+    <Provider store={store}>
+       <NavigationContainer>
+          <Stack.Navigator>
+          <Stack.Screen
+              name="Login"
+              component={Login}
+            />
+          <Stack.Screen
+              name="Signup"
+              component={Signup}
+            />
+          <Stack.Screen
+              name="ChangePassword"
+              component={ChangePassword}
           />
           <Stack.Screen
-            name="CameraApp"
-            component={CameraApp}
+              name="ForgetPassword"
+              component={ForgetPassword}
           />
-        </Stack.Navigator>
-      </NavigationContainer>
+          <Stack.Screen
+              options={{headerShown: true}}
+              name="Home"
+              component={Home}
+            />
+            <Stack.Screen
+              name="CameraApp"
+              component={CameraApp}
+            />
+            <Stack.Screen
+              name="Publication"
+              component={Publication}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+    </Provider>
   );
 }
 

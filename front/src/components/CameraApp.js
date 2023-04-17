@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Button, Image } from 'react-native';
+import { Text, View, SafeAreaView, Button, Image } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+import styles from '../styles/cameraAppStyle';
 
 export default function CameraApp() {
   let cameraRef = useRef();
@@ -69,21 +70,3 @@ export default function CameraApp() {
     </Camera>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  buttonContainer: {
-    position: 'absolute',
-    borderRadius:'24px',
-    backgroundColor: 'white',
-    alignSelf: 'flex-end',
-  },
-  preview: {
-    alignSelf: 'stretch',
-    flex: 1
-  }
-});
