@@ -30,8 +30,8 @@ Pour récupérer les données du projet, suivez les étapes suivantes :
 
   - il vous suffit d'exécuter la commande shell suivante :
     `bash
-    $ git pull
-   `
+ $ git pull
+`
     Vous aurez ensuite accès à tous les fichiers du projet, et vous pourrez l'ouvrir dans
     un éditeur de texte.
 
@@ -40,14 +40,14 @@ Pour récupérer les données du projet, suivez les étapes suivantes :
   - Exécutez la commande suivante pour créer une version locale du dépôt dans
     le dossier ** :
     `bash
-    $ git clone https://github.com/Amine-HADJEMI/Care-Plant.git
-    `
+$ git clone https://github.com/Amine-HADJEMI/Care-Plant.git
+`
     (**Attention\*\*, le dossier doit être vide originellement)
 
   - Si vous préférez utiliser votre clé SSH (si elle est configurée sur votre machine) :
     `bash
-    $ git clone git@github.com:Amine-HADJEMI/Care-Plant.git
-    `
+$ git clone git@github.com:Amine-HADJEMI/Care-Plant.git
+`
     Vous aurez de cette manière accès aux différents fichiers du projet. Pour mettre
     à jour ces fichiers, utilisez la commande précisée ci-dessus.
 
