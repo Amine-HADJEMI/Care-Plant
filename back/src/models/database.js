@@ -6,12 +6,12 @@ Database.db = new sqlite3.Database(
   "database.db",
   sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
   (err) => {
-  if (err) {
-    console.error(err.message);
+    if (err) {
+      console.error(err.message);
+    }
+    console.log("Connected to the database.");
   }
-  console.log("Connected to the database.");
-});
-
+);
 
 Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     userName TEXT PRIMARY KEY,
@@ -20,8 +20,7 @@ Database.db.run(`CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL
 )`);
 
-
-
+Database.db.run(`CREATE TABLE users_backup AS SELECT * FROM users;`);
 
 Database.db.run(`
     CREATE TABLE IF NOT EXISTS messages (
@@ -29,16 +28,14 @@ Database.db.run(`
         text TEXT NOT NULL,
         user TEXT NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`
-)
+    );`);
 Database.db.run(`
     CREATE TABLE IF NOT EXISTS password_reset_codes (
         email VARCHAR(255) NOT NULL,
         code VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (email)
-    );`
-)
+    );`);
 
 Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY,
