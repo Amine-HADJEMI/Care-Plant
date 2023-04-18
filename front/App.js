@@ -12,6 +12,7 @@ import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
 import Publication from './src/components/Publication'
 import ChatScreen from './src/components/Chat'
+import Privacy from './src/components/Privacy'
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
 
@@ -54,6 +55,10 @@ export default function App() {
             <Stack.Screen
               name="Chat"
               component={ChatScreen}
+            />
+            <Stack.Screen
+              name="Privacy"
+              component={Privacy}
             />
           </Stack.Navigator>
         </NavigationContainer>

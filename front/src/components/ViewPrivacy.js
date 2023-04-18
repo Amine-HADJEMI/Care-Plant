@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
   },
   footerText: {
     color: '#999',
-    fontSize: 16, //augmenter la taille de police ici
-    marginHorizontal: 10, //augmenter la marge horizontale pour éloigner les textes
+    fontSize: 20, 
+    marginHorizontal: 10,
   },
   privacyContainer: {
     position: 'absolute',
