@@ -67,7 +67,6 @@ const Home = () => {
         createdAt: new Date(),
         
       });
-      console.log("Document écrit avec ID: ", response.data.id);
       setTitle("");
       setDescription("");
       setImage(null);

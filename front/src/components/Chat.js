@@ -54,7 +54,6 @@ export default function ChatScreen() {
       };
       axios.post(`/add-message`, message)
         .then((response) => {
-          console.log(response.data);
           setMessages((prevMessages) => [...prevMessages, message]);
           setInputText('');
           scrollToBottom();

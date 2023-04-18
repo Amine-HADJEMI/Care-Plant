@@ -30,7 +30,6 @@ const ChangePassword = ({ navigation }) => {
       confirmPassword
     };
 
-    console.log('ma data: ',data)
     axios.post('/change-password', data)
       .then(response => {
         if (response.data.status === Status.UPDATE_PASSWORD_SUCCESSFULLY) {
@@ -39,7 +38,6 @@ const ChangePassword = ({ navigation }) => {
         } else {
           setErrorMessage(response.data.message)
         }
-        console.log('test', errorMessage)
       })
       .catch(error => {
         console.log(error)
