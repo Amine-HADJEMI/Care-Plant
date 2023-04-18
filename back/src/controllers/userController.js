@@ -68,36 +68,46 @@ async function createUser(req, res) {
   }
 }
 
+
 async function updateUser(req, res) {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
+
   const { name, email, password } = req.body;
   const { userName } = req.params;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ error: "Invalid password format" });
+  }
   try {
-    await User.update(
-      { name, email, password },
-      { where: { userName } }
-    );
+    const user = await User.findOne({ where: { userName } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.name = name;
+    user.email = email;
+    user.password = await bcrypt.hash(password, 10);
+    await user.save();
     res.json({ message: "User updated successfully" });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error updating user" });
   }
-  
-};
+}
+
 
 async function deleteUser(req, res) {  
   try {
-    const existingUser = await User.findOne({ where: { userName: req.params.userName }});
+    const existingUser = await User.findOne({ where: { userName: req.body.userName }});
 
     if (existingUser.length === 0) {
-      return res.status(404).send(`The user with userName ${req.params.userName} does not exist`);
+      return res.status(404).send(`The user with userName ${req.body.userName} does not exist`);
     }
 
     await User.destroy({
       where: {
-        userName: req.params.userName
+        userName: req.body.userName
       }
     });
-      res.status(200).send(`User with userName ${req.params.userName} deleted`);
+      res.status(200).send({message: `User with userName ${req.body.userName} deleted`, status: Status.DELETE_USER});
   } catch (err) {
     console.error(err);
     res.status(500).send(err);

@@ -14,8 +14,8 @@ app.get('/users',UserController.getAllUsers)
 
 app.post('/create-user', UserController.createUser)
 
-app.put('/user/:userName', UserController.updateUser)
+app.put('/updateUser', UserController.updateUser)
 
-app.delete('/user/:userName', UserController.deleteUser)
+app.delete('/deleteUser', UserController.deleteUser)
 
 module.exports = app;

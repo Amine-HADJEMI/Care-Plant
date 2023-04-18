@@ -39,6 +39,7 @@ async function loginUser(req, res){
       message: 'Authentification réussie', 
       status: Status.SUCCESS_AUTHENTIFICATION_USER, 
       user: {
+        userName: user.userName,
         name: user.name,
         email: user.email
       } });
