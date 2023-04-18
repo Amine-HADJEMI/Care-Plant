@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../routes/changePasswordRoutes");
+const app = require("../routes/emailRoutes");
 const sqlite3 = require("sqlite3").verbose();
 const { open } = require("sqlite");
 const Status = require("../utils/status");

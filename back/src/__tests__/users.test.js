@@ -3,7 +3,6 @@ const bcrypt = require("bcrypt");
 const app = require("../routes/userRoutes");
 const Database = require("../models/database");
 const db = Database.db;
-const Status = require("../utils/status");
 
 // Test de la route GET /users
 describe("Test de l'API", () => {
@@ -73,10 +72,7 @@ describe("TEST API", () => {
       .send(newUser)
       .set("Accept", "application/json");
     expect(response.statusCode).toBe(201);
-    expect(response.body).toEqual({
-      message: "User created successfully",
-      status: Status.CREATE_USER,
-    });
+    expect(response.text).toBe("User created successfully");
   });
 
   it("should not create a user with the same userName or email", async () => {
@@ -85,10 +81,7 @@ describe("TEST API", () => {
       .send(existingUser)
       .set("Accept", "application/json");
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({
-      message: "User already exists",
-      status: Status.USER_ALREADY_EXISTS,
-    });
+    expect(response.text).toBe("User already exists");
   });
 
   it("should not create a user with incomplete data", async () => {
@@ -101,24 +94,17 @@ describe("TEST API", () => {
       })
       .set("Accept", "application/json");
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual({
-      message: "Please complete the data",
-      status: Status.INCOMPELETE_DATA,
-    });
+    expect(response.text).toBe("Please complete the data");
   });
   // Mise à jour user
-  // it("should update an existing user", async () => {
-  //   const response = await request(app)
-  //     .put(`/user/${existingUser.userName}`)
-  //     .send({ name: "Updated User" })
-  //     .set("Accept", "application/json");
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body).toEqual({
-  //     message: "User updated successfully",
-  //     status: Status.UPDATE_USER,
-  //   });
-  //   expect(response.text).toBe("User updated successfully");
-  // });
+  it("should update an existing user", async () => {
+    const response = await request(app)
+      .put(`/user/${existingUser.userName}`)
+      .send({ name: "Updated User" })
+      .set("Accept", "application/json");
+    expect(response.statusCode).toBe(200);
+    expect(response.text).toBe("User updated successfully");
+  });
   //Suppresion user
   it("should delete an existing user", async () => {
     const response = await request(app)

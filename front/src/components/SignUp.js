@@ -119,7 +119,7 @@ export default class SignUp extends React.Component {
           {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>}
         </View>
         <View style={styles.privacyContainer}>
-          <ViewPrivacy/>
+          <ViewPrivacy navigation={this.props.navigation}/>
         </View>
       </View>
     )
