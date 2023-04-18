@@ -25,6 +25,17 @@ const User = sequelize.define('user', {
   }
 });
 
+const Role = sequelize.define('role', {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true
+  }
+});
+
+// Un utilisateur peut avoir un seul rôle
+User.belongsTo(Role);
+
 const Message = sequelize.define('message', {
   text: {
     type: Sequelize.STRING,
@@ -89,6 +100,27 @@ const Post = sequelize.define('post', {
   }
 });
 
-sequelize.sync({ force: true }); 
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection has been established successfully.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
 
-module.exports = { User, Message, Post, PasswordResetCode }; 
+sequelize.sync({ force: true }).then(() => {
+  // Créer les rôles "Admin" et "User" si ils n'existent pas déjà
+  console.log('Models synchronized with database');
+  Role.findOrCreate({
+    where: { name: 'Admin' },
+    defaults: { name: 'Admin' }
+  }).then(() => {
+    Role.findOrCreate({
+      where: { name: 'User' },
+      defaults: { name: 'User' }
+    });
+  });
+});
+
+
+module.exports = { User, Message, Post, Role, PasswordResetCode , sequelize}; 

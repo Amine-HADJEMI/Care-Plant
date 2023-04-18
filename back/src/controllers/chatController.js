@@ -1,9 +1,13 @@
 // const bcrypt = require("bcrypt");
 const Database = require("../models/database");
 const Status = require("../utils/status")
-const Message = require('../models/database');
+const { Message, sequelize} = require('../models/database');
 
 // const db = Database.db
+
+sequelize.sync().then(() => {
+  console.log('Models synchronized with database in chatController');
+});
 
 async function getAllMessages(req, res) {
   try {
