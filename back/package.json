@@ -18,7 +18,9 @@
     "express-validator": "6.15.0",
     "nodemailer": "^6.9.1",
     "randomstring": "^1.2.3",
+    "sequelize": "^6.31.0",
     "socket.io": "^4.6.1",
+<<<<<<< HEAD
     "sqlite3": "^5.1.4"
     
   },"devDependencies": {
@@ -28,4 +30,8 @@
     "ts-jest": "^29.0.5"
 }
   
+=======
+    "sqlite3": "^5.1.6"
+  }
+>>>>>>> d1b206e04c839c4b555dfb5f3de34f2fbd6a0899
 }
