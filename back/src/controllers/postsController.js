@@ -1,10 +1,14 @@
 const Database = require("../models/database");
 const sqlite3 = require("sqlite3");
-const Post = require('../models/database');
+const {Post, sequelize} = require('../models/database');
 
 const Status = require("../utils/status")
 
-// const db = Database.db
+// const: db = Database.db
+
+sequelize.sync().then(() => {
+  console.log('Models synchronized with database in postsController');
+});
 
 const getPosts = async (req, res) => {
   const posts = await Post.findAll();

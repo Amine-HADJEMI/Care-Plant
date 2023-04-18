@@ -5,7 +5,11 @@ const Database = require("../models/database");
 const randomstring = require('randomstring');
 const Status = require("../utils/status")
 const bcrypt = require("bcrypt");
-const { PasswordResetCode, User } = require('../models/database'); 
+const { PasswordResetCode, User, sequelize } = require('../models/database'); 
+
+sequelize.sync().then(() => {
+  console.log('Models synchronized with database in changePasswordController');
+});
 
 async function changePassword(req, res){
   const { email, confirmCode, newPassword, confirmPassword } = req.body;

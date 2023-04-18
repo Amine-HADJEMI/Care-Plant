@@ -11,7 +11,7 @@ import Status from '../utils/status'
 import Port from '../utils/portServer'
 import StyleApp from '../styles/styleApp'
 import styles from '../styles/signUpStyle';
-
+import ViewPrivacy from './ViewPrivacy'
 axios.defaults.baseURL = Port.LOCALHOST_WEB
 
 export default class SignUp extends React.Component {
@@ -29,7 +29,7 @@ export default class SignUp extends React.Component {
 
   createUser = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /^.{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
 
     const user = {
       userName: this.state.username,
@@ -48,7 +48,16 @@ export default class SignUp extends React.Component {
       return
     }
     if (!passwordRegex.test(user.password)) {
-      this.setState({ errorMessage: 'Le mot de passe doit contenir au moins 6 caractères' });
+      this.setState(
+        { errorMessage: (`
+        Le mot de passe doit respecter les conditions suivantes :\n
+          - Avoir une longueur comprise entre 8 et 20 caracteres alphanumériques (sans accents).\n 
+          - Contenir au moins 1 lettre MAJUSCULE.\n
+          - Contenir au moins 1 lettre minuscule.\n
+          - Contenir au moins 1 chiffre.\n
+          - Contenir au moins 1 caractère spécial de la liste suivante : *S@&000=#.!?+/£€%\n
+        `) }
+        );
       return
     }
 
@@ -68,44 +77,50 @@ export default class SignUp extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TextInput
-          style={StyleApp.input}
-          placeholder='Username'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('username', val)}
-        />
-        <TextInput
-          style={StyleApp.input}
-          placeholder='Nom & Prénom'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('name', val)}
-        />
-        <TextInput
-          style={StyleApp.input}
-          placeholder='E-mail'
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('email', val)}
-        />
-        <TextInput
-          style={StyleApp.input}
-          placeholder='Mot de passe'
-          secureTextEntry={true}
-          autoCapitalize="none"
-          placeholderTextColor='white'
-          onChangeText={val => this.onChangeText('password', val)}
-        />
+      <View style={styles.container} >
 
-        <TouchableOpacity style={styles.signUpBtn}
-          onPress={() => this.createUser()}
-        >
-          <Text style={styles.loginText} >Inscription</Text>
-        </TouchableOpacity>
+        <View style={styles.containerSignUP}>
+          <TextInput
+            style={StyleApp.input}
+            placeholder='Username'
+            autoCapitalize="none"
+            placeholderTextColor='white'
+            onChangeText={val => this.onChangeText('username', val)}
+          />
+          <TextInput
+            style={StyleApp.input}
+            placeholder='Nom & Prénom'
+            autoCapitalize="none"
+            placeholderTextColor='white'
+            onChangeText={val => this.onChangeText('name', val)}
+          />
+          <TextInput
+            style={StyleApp.input}
+            placeholder='E-mail'
+            autoCapitalize="none"
+            placeholderTextColor='white'
+            onChangeText={val => this.onChangeText('email', val)}
+          />
+          <TextInput
+            style={StyleApp.input}
+            placeholder='Mot de passe'
+            secureTextEntry={true}
+            autoCapitalize="none"
+            placeholderTextColor='white'
+            onChangeText={val => this.onChangeText('password', val)}
+          />
 
-        {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>}
+          <TouchableOpacity style={styles.signUpBtn}
+            onPress={() => this.createUser()}
+          >
+            <Text style={styles.loginText} >Inscription</Text>
+          </TouchableOpacity>
+
+          {this.state.errorMessage && <Text style={styles.errorStyle}>{this.state.errorMessage}</Text>}
+        </View>
+        <View style={styles.privacyContainer}>
+          <ViewPrivacy/>
+        </View>
       </View>
     )
   }

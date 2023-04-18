@@ -2,9 +2,13 @@ const bcrypt = require("bcrypt");
 const { body, validationResult } = require('express-validator');
 const Database = require("../models/database");
 const Status = require("../utils/status")
-const  Message  = require('../models/database'); 
+const  { Message, sequelize }  = require('../models/database'); 
 
 // const db = Database.db
+
+sequelize.sync().then(() => {
+  console.log('Models synchronized with database in messagesController');
+});
 
 
 async function getAllMessages(req, res){
