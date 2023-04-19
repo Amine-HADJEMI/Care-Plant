@@ -16,21 +16,11 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "express-validator": "6.15.0",
+    "jsonwebtoken": "^9.0.0",
     "nodemailer": "^6.9.1",
     "randomstring": "^1.2.3",
     "sequelize": "^6.31.0",
     "socket.io": "^4.6.1",
-<<<<<<< HEAD
-    "sqlite3": "^5.1.4"
-    
-  },"devDependencies": {
-    "@babel/preset-env": "^7.20.2",
-    "jest": "^29.4.3",
-    "supertest": "^6.3.3",
-    "ts-jest": "^29.0.5"
-}
-  
-=======
     "sqlite3": "^5.1.6"
   },
   "devDependencies": {
@@ -39,5 +29,4 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5"
   }
->>>>>>> d1b206e04c839c4b555dfb5f3de34f2fbd6a0899
 }
