@@ -24,6 +24,7 @@ export default function Login({navigation}) {
   axios.defaults.baseURL = Port.LOCALHOST_WEB
 
   const loginSuccess = (email, password) => {    
+    // navigation.navigate('Home')
     
     axios.post('/login', {email, password})
     .then(response => {
@@ -32,7 +33,10 @@ export default function Login({navigation}) {
         setErrorMessage('invalid email or password')
       } else if (response.data.status === Status.SUCCESS_AUTHENTIFICATION_USER) {
         
-        dispatch(connectUser({ name: response.data.user.name, emailUser: response.data.user.email }))        
+        console.log('test', response.data.user.userName)
+        console.log('test', response.data.user)
+
+        dispatch(connectUser({ userName: response.data.user.userName, name: response.data.user.name, emailUser: response.data.user.email }))        
 
         navigation.navigate('Home')
 
