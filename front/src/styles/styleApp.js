@@ -1,7 +1,6 @@
 
 export default {
   input: {
-    width: 350,
     height: 55,
     backgroundColor: '#A1E79F',
     margin: 10,
