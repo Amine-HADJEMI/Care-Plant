@@ -1,126 +1,130 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'database.sqlite'
+const sequelize = new Sequelize("test", "root", "123", {
+  host: "localhost",
+  dialect: "mysql",
 });
 
-const User = sequelize.define('user', {
+const User = sequelize.define("user", {
   userName: {
     type: Sequelize.STRING,
-    primaryKey: true
+    primaryKey: true,
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
+    unique: true,
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 });
 
-const Role = sequelize.define('role', {
+const Role = sequelize.define("role", {
   name: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true
-  }
+    unique: true,
+  },
 });
 
 // Un utilisateur peut avoir un seul rôle
 User.belongsTo(Role);
 
-const Message = sequelize.define('message', {
+const Message = sequelize.define("message", {
   text: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   user: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   createdAt: {
     type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
-  }
+    defaultValue: Sequelize.NOW,
+  },
 });
 
-const PasswordResetCode = sequelize.define('password_reset_code', {
+const PasswordResetCode = sequelize.define(
+  "password_reset_code",
+  {
     email: {
       type: Sequelize.DataTypes.STRING(255),
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     code: {
       type: Sequelize.DataTypes.STRING(255),
-      allowNull: false
+      allowNull: false,
     },
     created_at: {
       type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.DataTypes.NOW
-    }
-  }, {
+      defaultValue: Sequelize.DataTypes.NOW,
+    },
+  },
+  {
     timestamps: false,
-    tableName: 'password_reset_codes'
-});
+    tableName: "password_reset_codes",
+  }
+);
 
-const Post = sequelize.define('post', {
+const Post = sequelize.define("post", {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   title: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   description: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   image: {
-    type: Sequelize.BLOB
+    type: Sequelize.BLOB,
   },
   userName: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
   },
   createdAt: {
     type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW
+    defaultValue: Sequelize.NOW,
   },
   carePlant: {
     type: Sequelize.BOOLEAN,
-    defaultValue: false
+    defaultValue: false,
+  },
+});
+
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
   }
-});
+})();
 
-sequelize.authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// sequelize.sync({ force: true }).then(() => {
+//   // Créer les rôles "Admin" et "User" si ils n'existent pas déjà
+//   console.log("Models synchronized with database");
+//   Role.findOrCreate({
+//     where: { name: "Admin" },
+//     defaults: { name: "Admin" },
+//   }).then(() => {
+//     Role.findOrCreate({
+//       where: { name: "User" },
+//       defaults: { name: "User" },
+//     });
+//   });
+// });
 
-sequelize.sync({ force: true }).then(() => {
-  // Créer les rôles "Admin" et "User" si ils n'existent pas déjà
-  console.log('Models synchronized with database');
-  Role.findOrCreate({
-    where: { name: 'Admin' },
-    defaults: { name: 'Admin' }
-  }).then(() => {
-    Role.findOrCreate({
-      where: { name: 'User' },
-      defaults: { name: 'User' }
-    });
-  });
-});
-
-
-module.exports = { User, Message, Post, Role, PasswordResetCode , sequelize}; 
+module.exports = { User, Message, Post, Role, PasswordResetCode, sequelize };
