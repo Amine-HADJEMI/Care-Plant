@@ -1,9 +1,7 @@
 const bcrypt = require("bcrypt");
-const Database = require("../models/database");
 const Status = require("../utils/status");
 const { User, Role, sequelize } = require("../models/database");
 const { Op } = require("sequelize");
-// const db = Database.db
 
 sequelize.sync().then(() => {
   console.log("Models synchronized with database in userController");
