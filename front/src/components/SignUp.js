@@ -11,7 +11,8 @@ axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
 export default class SignUp extends React.Component {
   state = {
-    name: "",
+    lastName: "",
+    firstName: "",
     password: "",
     email: "",
     errorMessage: "",
@@ -27,12 +28,13 @@ export default class SignUp extends React.Component {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
 
     const user = {
-      name: this.state.name,
+      lastName: this.state.lastName,
+      firstName: this.state.firstName,
       email: this.state.email,
       password: this.state.password,
     };
 
-    if (!user.name || !user.email || !user.password) {
+    if (!user.lastName || !user.firstName || !user.email || !user.password) {
       this.setState({ errorMessage: "Veuillez compléter tous les champs" });
       return;
     }
@@ -76,10 +78,17 @@ export default class SignUp extends React.Component {
         <View style={styles.containerSignUP}>
           <TextInput
             style={StyleApp.input}
-            placeholder="Nom & Prénom"
+            placeholder="Nom"
             autoCapitalize="none"
             placeholderTextColor="white"
-            onChangeText={(val) => this.onChangeText("name", val)}
+            onChangeText={(val) => this.onChangeText("lastName", val)}
+          />
+          <TextInput
+            style={StyleApp.input}
+            placeholder="Prénom"
+            autoCapitalize="none"
+            placeholderTextColor="white"
+            onChangeText={(val) => this.onChangeText("firstName", val)}
           />
           <TextInput
             style={StyleApp.input}
