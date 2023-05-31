@@ -1,7 +1,11 @@
 const bcrypt = require("bcrypt");
+const Database = require("../models/database");
 const Status = require("../utils/status");
 const { User, Role, sequelize } = require("../models/database");
 const { Op } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
+
+// const db = Database.db
 
 sequelize.sync().then(() => {
   console.log("Models synchronized with database in userController");
@@ -19,60 +23,58 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res) {
   try {
-    const password = req.body.password;
+    const { lastName, firstName, email, password } = req.body;
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await User.findOne({
+      where: { email: email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ error: "Cet utilisateur existe déjà" });
+    }
+
+    // Rechercher le rôle par défaut 'ROLE_USER' ou le créer s'il n'existe pas encore
+    let role = await Role.findOne({
+      where: { name: "ROLE_USER" },
+    });
+
+    if (!role) {
+      role = await Role.create({
+        name: "ROLE_USER",
+      });
+    }
+
+    // Vérifier le format du mot de passe avec une expression régulière
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
-      res.status(400).send({
-        message: "Invalid password",
-        status: Status.INVALID_PASSWORD_FORMAT,
+      return res.status(400).json({
+        error:
+          "Le mot de passe doit contenir au moins 8 caractères, une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial",
       });
-    } else {
-      const saltRounds = 10;
-      const hash = await bcrypt.hash(password, saltRounds);
-
-      if (req.body.userName && req.body.email) {
-        const existingUsers = await User.findAll({
-          where: {
-            [Op.or]: [
-              { userName: req.body.userName },
-              { email: req.body.email },
-            ],
-          },
-        });
-
-        if (existingUsers.length > 0) {
-          res.status(200).send({
-            message: "User already exists",
-            status: Status.USER_ALREADY_EXISTS,
-          });
-        } else {
-          const user = await User.create({
-            userName: req.body.userName,
-            name: req.body.name,
-            email: req.body.email.toLowerCase(),
-            password: hash,
-          });
-          // Add default role "User" to user
-          const role = await Role.findOne({ where: { name: "User" } });
-          await user.setRole(role);
-
-          res.status(201).send({
-            message: "User created successfully",
-            status: Status.CREATE_USER,
-          });
-        }
-      } else {
-        res.status(200).send({
-          message: "Please complete the data",
-          status: Status.INCOMPELETE_DATA,
-        });
-      }
     }
+
+    // Créer l'utilisateur dans la base de données avec le rôle par défaut
+    const user = await User.create({
+      id: uuidv4(),
+      lastName,
+      firstName,
+      email,
+      password,
+      RoleId: 1,
+    });
+
+    res.status(201).send({
+      message: "User created successfully",
+      status: Status.CREATE_USER,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error creating user");
+    console.error("Erreur lors de la création de l'utilisateur :", error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la création de l'utilisateur" });
   }
 }
 
