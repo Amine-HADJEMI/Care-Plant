@@ -1,48 +1,78 @@
 const { Sequelize, DataTypes } = require("sequelize");
-
-const sequelize = new Sequelize("test", "root", "123", {
+const { v4: uuidv4 } = require("uuid");
+const sequelize = new Sequelize("carePlant", "root", "123", {
   host: "localhost",
   dialect: "mysql",
 });
 
 const User = sequelize.define("user", {
   userName: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
+    defaultValue: () => uuidv4(),
     primaryKey: true,
   },
   name: {
-    type: Sequelize.STRING,
-    allowNull: false,
+    type: DataTypes.STRING,
   },
   email: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
   password: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  roleId: {
+    type: DataTypes.INTEGER,
+    defaultValue: 2, // Valeur correspondant à "ROLE_USER"
     allowNull: false,
   },
 });
 
 const Role = sequelize.define("role", {
   name: {
-    type: Sequelize.STRING,
+    type: DataTypes.STRING,
     allowNull: false,
     unique: true,
   },
 });
 
-// Un utilisateur peut avoir un seul rôle
-User.belongsTo(Role);
-
-const Message = sequelize.define("message", {
-  text: {
-    type: Sequelize.STRING,
+const Post = sequelize.define("post", {
+  uuid: {
+    type: DataTypes.STRING,
+    defaultValue: () => uuidv4(),
+    primaryKey: true,
+  },
+  title: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  user: {
-    type: Sequelize.STRING,
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  image: {
+    type: DataTypes.BLOB,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW,
+  },
+  carePlant: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+});
+
+const Message = sequelize.define("message", {
+  uuid: {
+    type: DataTypes.STRING,
+    defaultValue: () => uuidv4(),
+    primaryKey: true,
+  },
+  content: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   createdAt: {
@@ -55,17 +85,17 @@ const PasswordResetCode = sequelize.define(
   "password_reset_code",
   {
     email: {
-      type: Sequelize.DataTypes.STRING(255),
+      type: DataTypes.STRING(255),
       allowNull: false,
       primaryKey: true,
     },
     code: {
-      type: Sequelize.DataTypes.STRING(255),
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     created_at: {
-      type: Sequelize.DataTypes.DATE,
-      defaultValue: Sequelize.DataTypes.NOW,
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
@@ -73,36 +103,16 @@ const PasswordResetCode = sequelize.define(
     tableName: "password_reset_codes",
   }
 );
-
-const Post = sequelize.define("post", {
-  id: {
-    type: Sequelize.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  title: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  description: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  image: {
-    type: Sequelize.BLOB,
-  },
-  userName: {
-    type: Sequelize.STRING,
-  },
-  createdAt: {
-    type: Sequelize.DATE,
-    defaultValue: Sequelize.NOW,
-  },
-  carePlant: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-  },
-});
+Role.hasMany(User, { foreignKey: "roleId" });
+User.belongsTo(Role, { foreignKey: "roleId" });
+User.belongsTo(Role, { foreignKey: "roleId" });
+Role.hasMany(User, { foreignKey: "roleId" });
+Post.belongsTo(User, { foreignKey: "UserId" });
+User.hasMany(Post, { foreignKey: "UserId" });
+Message.belongsTo(User, { foreignKey: "UserId" });
+User.hasMany(Message, { foreignKey: "UserId" });
+PasswordResetCode.belongsTo(User, { foreignKey: "UserId" });
+User.hasMany(PasswordResetCode, { foreignKey: "UserId" });
 
 (async () => {
   try {
