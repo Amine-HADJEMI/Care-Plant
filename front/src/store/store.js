@@ -2,9 +2,10 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: "user",
-  initialState: { name: '', emailUser: '' },
+  initialState: {userName: '' , name: '', emailUser: '' },
   reducers: {
     connectUser: (state, action) => {
+      state.userName = action.payload.userName;
       state.name = action.payload.name;
       state.emailUser = action.payload.emailUser;
     }

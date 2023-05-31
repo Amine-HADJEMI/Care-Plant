@@ -95,6 +95,11 @@ export default StyleSheet.create({
     top: 10,
     right: 20,
   },
+  settingsButton: {
+    position: 'absolute',
+    top: 10,
+    right: 60,
+  },
   publicationButton: {
     position: 'absolute',
     bottom: 20,
