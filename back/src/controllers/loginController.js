@@ -1,12 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require('express-validator');
-const Database = require("../models/database");
 const Status = require("../utils/status")
-const  { User, sequelize }  = require('../models/database'); 
-
-
-const db = Database.db;
+const User = require('../models/database'); 
 
 async function loginUser(req, res) {
   const { email, password } = req.body;

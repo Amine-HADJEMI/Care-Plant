@@ -1,4 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const Sequelize = require('sequelize');
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -121,6 +121,5 @@ sequelize.sync({ force: true }).then(() => {
     });
   });
 });
-
 
 module.exports = { User, Message, Post, Role, PasswordResetCode , sequelize}; 

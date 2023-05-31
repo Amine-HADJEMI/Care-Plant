@@ -1,10 +1,4 @@
-const Database = require("../models/database");
-const sqlite3 = require("sqlite3");
 const {Post, sequelize} = require('../models/database');
-
-const Status = require("../utils/status")
-
-// const: db = Database.db
 
 sequelize.sync().then(() => {
   console.log('Models synchronized with database in postsController');
@@ -64,9 +58,7 @@ const carePlant = async (req, res) => {
     console.error(err);
     res.status(500).send('Erreur lors de la mise à jour de la publication');
   }
-  
 };
-
 
 module.exports = { 
   savePhoto,
