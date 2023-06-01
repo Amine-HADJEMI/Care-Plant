@@ -34,42 +34,37 @@ async function createUser(req, res) {
       return res.status(400).json({ error: "Cet utilisateur existe déjà" });
     }
 
-    // Rechercher le rôle par défaut 'ROLE_USER' ou le créer s'il n'existe pas encore
+    // Rechercher le rôle par défaut 'ROLE_USER'
     let role = await Role.findOne({
       where: { name: "ROLE_USER" },
     });
 
-    if (!role) {
-      role = await Role.create({
-        name: "ROLE_USER",
-      });
-    }
-
     // Vérifier le format du mot de passe avec une expression régulière
     const passwordRegex =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
 
     if (!passwordRegex.test(password)) {
-      return res.status(400).json({
-        error:
-          "Le mot de passe doit contenir au moins 8 caractères, une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial",
+      res.status(400).send({
+        message: "Invalid password",
+        status: Status.INVALID_PASSWORD_FORMAT,
+      });
+    } else {
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(password, saltRounds);
+      // Créer l'utilisateur dans la base de données avec le rôle par défaut
+      const user = await User.create({
+        id: uuidv4(),
+        lastName,
+        firstName,
+        email,
+        password: hash,
+        RoleId: role.id,
+      });
+      res.status(201).send({
+        message: "User created successfully",
+        status: Status.CREATE_USER,
       });
     }
-
-    // Créer l'utilisateur dans la base de données avec le rôle par défaut
-    const user = await User.create({
-      id: uuidv4(),
-      lastName,
-      firstName,
-      email,
-      password,
-      RoleId: 1,
-    });
-
-    res.status(201).send({
-      message: "User created successfully",
-      status: Status.CREATE_USER,
-    });
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error);
     res
@@ -78,24 +73,11 @@ async function createUser(req, res) {
   }
 }
 
-
 async function updateUser(req, res) {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
-
   const { name, email, password } = req.body;
   const { userName } = req.params;
-  if (!passwordRegex.test(password)) {
-    return res.status(400).json({ error: "Invalid password format" });
-  }
   try {
-    const user = await User.findOne({ where: { userName } });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    user.name = name;
-    user.email = email;
-    user.password = await bcrypt.hash(password, 10);
-    await user.save();
+    await User.update({ name, email, password }, { where: { userName } });
     res.json({ message: "User updated successfully" });
   } catch (err) {
     console.error(err);
@@ -105,18 +87,22 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-    const existingUser = await User.findOne({ where: { userName: req.body.userName }});
+    const existingUser = await User.findOne({
+      where: { userName: req.params.userName },
+    });
 
     if (existingUser.length === 0) {
-      return res.status(404).send(`The user with userName ${req.body.userName} does not exist`);
+      return res
+        .status(404)
+        .send(`The user with userName ${req.params.userName} does not exist`);
     }
 
     await User.destroy({
       where: {
-        userName: req.body.userName
-      }
+        userName: req.params.userName,
+      },
     });
-      res.status(200).send({message: `User with userName ${req.body.userName} deleted`, status: Status.DELETE_USER});
+    res.status(200).send(`User with userName ${req.params.userName} deleted`);
   } catch (err) {
     console.error(err);
     res.status(500).send(err);
