@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { View, TouchableOpacity, Text, Image, TextInput, Button } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  TextInput,
+  Button,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { FontAwesome, Entypo } from '@expo/vector-icons';
-import colors from '../styles/colors';
-import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
-import Port from "../utils/portServer"
-import { useSelector } from 'react-redux';
-import { IconButton, MD3Colors } from 'react-native-paper';
-import styles from '../styles/homeStyle';
+import { FontAwesome, Entypo } from "@expo/vector-icons";
+import colors from "../styles/colors";
+import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
+import Port from "../utils/portServer";
+import { useSelector } from "react-redux";
+import { IconButton, MD3Colors } from "react-native-paper";
+import styles from "../styles/homeStyle";
 
-axios.defaults.baseURL = Port.LOCALHOST_WEB
+axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
 const Home = () => {
   const userData = useSelector((state) => state.user);
-  
+  console.log(userData);
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -48,7 +55,7 @@ const Home = () => {
     });
 
     if (!result.cancelled) {
-      setImage(result.uri)
+      setImage(result.uri);
     }
   };
 
@@ -59,13 +66,12 @@ const Home = () => {
     }
 
     try {
-      const response = await axios.post('/save-photo', {
+      const response = await axios.post("/save-photo", {
         title,
         description,
         image,
-        userName: userData.name,
+        userName: userData.lastName,
         createdAt: new Date(),
-        
       });
       setTitle("");
       setDescription("");
@@ -78,22 +84,22 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={styles.logOutButton}
-        >
-          <Entypo name="lock" size={24} color={colors.red} />
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Login")}
+        style={styles.logOutButton}
+      >
+        <Entypo name="lock" size={24} color={colors.red} />
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Settings")}
-          style={styles.settingsButton}
-        >
-          <Entypo name="cog" size={24} color={colors.blue} />
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Settings")}
+        style={styles.settingsButton}
+      >
+        <Entypo name="cog" size={24} color={colors.blue} />
+      </TouchableOpacity>
 
-      <Text style={styles.welcome}>Welcome {userData.name}</Text>
-      
+      <Text style={styles.welcome}>Welcome {userData.firstName}</Text>
+
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Titre"
@@ -107,23 +113,18 @@ const Home = () => {
           value={description}
           onChangeText={setDescription}
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleChoosePhoto}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleChoosePhoto}>
           <Text style={styles.buttonText}>Choisir une photo</Text>
         </TouchableOpacity>
-        {image && (
-          <Image source={{ uri: image }} style={styles.previewImage} />
-        )}
+        {image && <Image source={{ uri: image }} style={styles.previewImage} />}
         <View style={styles.cameraButtonContainer}>
-        <IconButton
-          style={styles.cameraButton}
-          icon="camera"
-          iconColor={MD3Colors.neutral0}
-          containerColor="#EEEEEE"
-          size={100}
-          onPress={() => navigation.navigate('CameraApp')}
+          <IconButton
+            style={styles.cameraButton}
+            icon="camera"
+            iconColor={MD3Colors.neutral0}
+            containerColor="#EEEEEE"
+            size={100}
+            onPress={() => navigation.navigate("CameraApp")}
           />
         </View>
         <Button title="Publier" onPress={handlePost} />
@@ -143,5 +144,5 @@ const Home = () => {
     </View>
   );
 };
-  
+
 export default Home;

@@ -42,12 +42,10 @@ export default function Login({ navigation }) {
         ) {
           dispatch(
             connectUser({
-              userName: response.data.user.userName,
-              name: response.data.user.name,
+              firstName: response.data.user.firstName,
               emailUser: response.data.user.email,
             })
           );
-
           navigation.navigate("Home");
 
           setErrorMessage(null);
@@ -76,7 +74,7 @@ export default function Login({ navigation }) {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Mot de passe top secret"
+          placeholder="Mot de passe"
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
