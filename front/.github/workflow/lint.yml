@@ -1,0 +1,25 @@
+# Utilisation du workflow de GitHub Actions
+name: lint
+
+# Événement qui déclenche la CI à chaque modification sur la branche "main"
+on:
+  push:
+    branches:
+      - main
+
+# Étapes à effectuer dans la CI
+jobs:
+  Eslint:
+    # Système d'exploitation sur lequel exécuter les tests
+    runs-on: ubuntu-latest
+    # Étapes à effectuer dans le travail
+    steps:
+      # Récupération du code source depuis le dépôt GitHub
+      - name: Checkout
+        uses: actions/checkout@v2
+      # Installation des dépendances avec npm
+      - name: Install Dependencies
+        run: npm install
+      # Exécution des tests
+      - name: Run ESlint
+        run: npx eslint .
