@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
-  StyleSheet,
   Text,
   View,
   Image,
@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const [numFailedAttempts, setNumFailedAttempts] = useState(0); // ajouter cette variable d'état pour stocker le nombre de tentatives de connexion infructueuses
+  const [numFailedAttempts, setNumFailedAttempts] = useState(0);
 
   axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
@@ -31,11 +31,9 @@ export default function Login({ navigation }) {
       .then((response) => {
         if (response.data.status === Status.INVALID_EMAIL_OR_PASSWORD) {
           setErrorMessage("invalid email or password");
-          setNumFailedAttempts(numFailedAttempts + 1); // incrémente le nombre de tentatives infructueuses après une erreur de connexion
+          setNumFailedAttempts(numFailedAttempts + 1);
           if (numFailedAttempts >= 4) {
-            // vérifie si l'utilisateur a atteint 5 tentatives infructueuses
-            setErrorMessage("Votre compte a été verrouillé"); // affiche un message d'erreur pour indiquer que le compte est verrouillé
-            // ici, vous pouvez également implémenter une fonctionnalité pour verrouiller le compte de l'utilisateur en modifiant les paramètres de son compte dans la base de données
+            setErrorMessage("Votre compte a été verrouillé");
           }
         } else if (
           response.data.status === Status.SUCCESS_AUTHENTIFICATION_USER
@@ -51,7 +49,7 @@ export default function Login({ navigation }) {
           navigation.navigate("Home");
 
           setErrorMessage(null);
-          setNumFailedAttempts(0); // réinitialise le nombre de tentatives infructueuses après une connexion réussie
+          setNumFailedAttempts(0);
         }
         console.log("reponse", response.data);
       })
@@ -101,10 +99,14 @@ export default function Login({ navigation }) {
         style={styles.signUpBtn}
         onPress={() => navigation.navigate("Signup")}
       >
-        <Text style={styles.loginText}>Vous n'avez pas de compte?</Text>
+        <Text style={styles.loginText}>Vous n&apos;avez pas de compte?</Text>
       </TouchableOpacity>
 
       {errorMessage && <Text style={styles.errorStyle}>{errorMessage}</Text>}
     </View>
   );
 }
+
+Login.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

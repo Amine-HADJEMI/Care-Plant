@@ -12,7 +12,7 @@ const Privacy = () => {
           essentielle pour garantir la sécurité des données de nos utilisateurs.
           Lorsque vous vous connectez à notre application, nous collectons
           certaines informations, telles que votre nom et votre adresse e-mail.
-          Nous utilisons ces informations pour améliorer l'expérience utilisateur
+          Nous utilisons ces informations pour améliorer l&apos;expérience utilisateur
           et personnaliser notre service en fonction de vos préférences. Nous ne
           partageons pas ces données avec des tiers sans votre consentement
           explicite. De plus, nous prenons des mesures de sécurité appropriées
@@ -29,7 +29,7 @@ const Privacy = () => {
 
         <Text style={styles.subtext}>
           <Text style={styles.bold}>Données de compte :</Text> Pour utiliser
-          certaines fonctionnalités (comme l'accès au contenu), vous devez créer
+          certaines fonctionnalités (comme l&apos;accès au contenu), vous devez créer
           un compte utilisateur, ce qui nous oblige à collecter et à stocker
           votre adresse électronique, votre User Name choisi, votre nom, votre
           prénom et votre mot de passe. Pour créer un compte d’utilisateur de
@@ -50,7 +50,7 @@ const Privacy = () => {
 
         <Text style={styles.subtext}>
           <Text style={styles.bold}>Contenu partagé :</Text> Puisque
-          l'objective est de partager des photos de plantes, les photos exportés
+          l&apos;objective est de partager des photos de plantes, les photos exportés
           par l’utilisateur sont stockées dans la base de données de
           l’application, est affichés aux autres utilisateurs, ainsi que les
           messages de Chat sont partagés entre utilisateurs pour qu’ils peuvent
@@ -65,8 +65,8 @@ const Privacy = () => {
         </Text>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

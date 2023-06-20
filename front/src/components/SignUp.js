@@ -1,5 +1,6 @@
 import React from "react";
 import { View, TouchableOpacity, TextInput, Text } from "react-native";
+import PropTypes from "prop-types";
 
 import axios from "axios";
 import Status from "../utils/status";
@@ -67,9 +68,6 @@ export default class SignUp extends React.Component {
           this.props.navigation.navigate("Home");
         }
       })
-      .catch((error) => {
-        console.log(error);
-      });
   };
 
   render() {
@@ -124,3 +122,11 @@ export default class SignUp extends React.Component {
     );
   }
 }
+
+SignUp.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
+ViewPrivacy.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

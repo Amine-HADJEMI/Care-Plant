@@ -26,6 +26,7 @@
     "expo-status-bar": "~1.4.2",
     "native-base": "^3.4.25",
     "openssl": "^2.0.0",
+    "prop-types": "^15.8.1",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "eslint": "^8.41.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-react": "^7.32.2"
   },
   "private": true
