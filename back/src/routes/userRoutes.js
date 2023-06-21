@@ -4,18 +4,18 @@ const bodyParser = require("body-parser");
 
 app.use(bodyParser.json());
 
-const UserController = require('../controllers/userController')
+const UserController = require("../controllers/userController");
 
 app.get("/", (req, res) => {
   res.send("Welcome to BACK -- CarePlant...");
 });
 
-app.get('/users',UserController.getAllUsers)
+app.get("/users", UserController.getAllUsers);
 
-app.post('/create-user', UserController.createUser)
+app.post("/create-user", UserController.createUser);
 
-app.put('/user/:userName', UserController.updateUser)
+app.put('/updateUser', UserController.updateUser)
 
-app.delete('/user/:userName', UserController.deleteUser)
+app.delete('/deleteUser', UserController.deleteUser)
 
 module.exports = app;

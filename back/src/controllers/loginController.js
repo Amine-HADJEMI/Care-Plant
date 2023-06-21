@@ -1,12 +1,10 @@
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt");
 const { body, validationResult } = require('express-validator');
-const Database = require("../models/database");
 const Status = require("../utils/status")
+const User = require('../models/database'); 
 
-const db = Database.db
-
-
-async function loginUser(req, res){
+async function loginUser(req, res) {
   const { email, password } = req.body;
 
   try {
@@ -17,19 +15,11 @@ async function loginUser(req, res){
       return res.status(200).json({ errors: errors.array(), status: Status.INVALID_EMAIL_OR_PASSWORD });
     }
 
-    const existingUser = await new Promise((resolve, reject) => {
-      db.all('SELECT * FROM users WHERE email = ?', [email.toLowerCase()], 
-        (err, rows) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(rows);
-      });
-    });
+    const existingUser = await User.findAll({ where: { email: email.toLowerCase() } });
 
-    const user = existingUser[0]
+    const user = existingUser[0];
     if (!user) {
-      return res.status(200).json({message: 'Utilisateur non trouvé', status: Status.INVALID_EMAIL_OR_PASSWORD , });
+      return res.status(200).json({ message: 'Utilisateur non trouvé', status: Status.INVALID_EMAIL_OR_PASSWORD });
     }
 
     const passwordHash = user.password;
@@ -39,13 +29,17 @@ async function loginUser(req, res){
       return res.status(200).json({ message: 'Mot de passe incorrect', status: Status.INVALID_EMAIL_OR_PASSWORD });
     }
 
+    const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+
     res.json({ 
       message: 'Authentification réussie', 
       status: Status.SUCCESS_AUTHENTIFICATION_USER, 
+      token: token,
       user: {
         name: user.name,
         email: user.email
-      } });
+      } 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Erreur de base de données' });

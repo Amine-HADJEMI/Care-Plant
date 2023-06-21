@@ -12,8 +12,10 @@ import Home from './src/components/Home';
 import CameraApp from './src/components/CameraApp';
 import Publication from './src/components/Publication'
 import ChatScreen from './src/components/Chat'
+import Privacy from './src/components/Privacy'
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
+import Settings from './src/components/Settings'
 
 const Stack = createStackNavigator();
 
@@ -55,17 +57,18 @@ export default function App() {
               name="Chat"
               component={ChatScreen}
             />
+            <Stack.Screen
+              name="Privacy"
+              component={Privacy}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={Settings}
+            />
+            
           </Stack.Navigator>
         </NavigationContainer>
     </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

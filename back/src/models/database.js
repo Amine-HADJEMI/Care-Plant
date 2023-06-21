@@ -1,53 +1,115 @@
-const sqlite3 = require("sqlite3").verbose();
-
-const Database = {};
-
-Database.db = new sqlite3.Database(
-  "database.db",
-  sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
-  (err) => {
-  if (err) {
-    console.error(err.message);
-  }
-  console.log("Connected to the database.");
+const { Sequelize, DataTypes } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
+const sequelize = new Sequelize("careplant", "root", "123", {
+  host: "localhost",
+  dialect: "mysql",
+});
+sequelize.sync();
+// Définir les modèles de tables
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: Sequelize.UUIDV4,
+    primaryKey: true,
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  firstName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
+const Role = sequelize.define("Role", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
-Database.db.run(`CREATE TABLE IF NOT EXISTS users (
-    userName TEXT PRIMARY KEY,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
-)`);
+const Post = sequelize.define("Post", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+});
 
+const Message = sequelize.define("Message", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  text: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
+const PasswordEmailResetCode = sequelize.define("PasswordEmailResetCode", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  code: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
 
+// Relations entre les tables
+User.belongsTo(Role); // Relation "User" avec "Role"
+User.hasMany(Post); // Relation "User" avec "Post"
+User.hasMany(Message); // Relation "User" avec "Message"
+User.hasMany(PasswordEmailResetCode); // Relation "User" avec "PasswordEmailResetCode"
 
-Database.db.run(`
-    CREATE TABLE IF NOT EXISTS messages (
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        text TEXT NOT NULL,
-        user TEXT NOT NULL,
-        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );`
-)
-Database.db.run(`
-    CREATE TABLE IF NOT EXISTS password_reset_codes (
-        email VARCHAR(255) NOT NULL,
-        code VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (email)
-    );`
-)
-
-Database.db.run(`CREATE TABLE IF NOT EXISTS posts (
-    id INTEGER PRIMARY KEY,
-    title TEXT NOT NULL,
-    description TEXT NOT NULL,
-    image BLOB,
-    userName TEXT,
-    createdAt DATETIME NOT NULL,
-    carePlant INTEGER NOT NULL DEFAULT 0 CHECK (carePlant IN (0, 1))
-)`);
-
-module.exports = Database;
+// Créer les tables dans la base de données
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Tables créées avec succès.");
+  })
+  .catch((error) => {
+    console.error("Erreur lors de la création des tables :", error);
+  });
+module.exports = {
+  User,
+  Message,
+  Post,
+  Role,
+  PasswordEmailResetCode,
+  sequelize,
+};

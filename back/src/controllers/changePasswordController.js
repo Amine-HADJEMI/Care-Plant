@@ -1,10 +1,15 @@
 
 const nodemailer = require('nodemailer');
 const Database = require("../models/database");
-const db = Database.db
+// const db = Database.db
 const randomstring = require('randomstring');
 const Status = require("../utils/status")
 const bcrypt = require("bcrypt");
+const { PasswordResetCode, User, sequelize } = require('../models/database'); 
+
+sequelize.sync().then(() => {
+  console.log('Models synchronized with database in changePasswordController');
+});
 
 async function changePassword(req, res){
   const { email, confirmCode, newPassword, confirmPassword } = req.body;
@@ -16,33 +21,39 @@ async function changePassword(req, res){
   if (newPassword !== confirmPassword) {
     return res.status(200).send({ message: 'Les mots de passe ne correspondent pas' });
   }
-
-  try{
+  
+  try {
     const saltRounds = 10;
     const hashPassword = await bcrypt.hash(newPassword, saltRounds);
-    db.get('SELECT email FROM password_reset_codes WHERE email = ? AND code = ?', [email, confirmCode], (err, row) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send({ message: 'Erreur du serveur' });
+    
+    // Rechercher le code de réinitialisation de mot de passe correspondant à l'email et au code de confirmation spécifiés
+    const code = await PasswordResetCode.findOne({
+      where: {
+        email: email,
+        code: confirmCode
       }
+    });
   
-      if (!row) {
-        return res.status(200).send({ message: 'Code de confirmation incorrect' });
+    if (!code) {
+      return res.status(200).send({ message: 'Code de confirmation incorrect' });
+    }
+  
+    // Mettre à jour le mot de passe de l'utilisateur correspondant à l'email spécifié
+    const user = await User.update({
+      password: hashPassword
+    }, {
+      where: {
+        email: email
       }
+    });
   
+    return res.status(201).send({ message: 'Mot de passe modifié avec succès', status: Status.UPDATE_PASSWORD_SUCCESSFULLY});
   
-      db.run('UPDATE users SET password = ? WHERE email = ?', [hashPassword, email], (err) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).send({ message: 'Erreur du serveur' });
-        }
-        return res.status(201).send({ message: 'Mot de passe modifié avec succès', status: Status.UPDATE_PASSWORD_SUCCESSFULLY});
-      });
-    });  
-  } catch(e){
+  } catch (e) {
     console.log(e)
-  }
- 
+    return res.status(500).send({ message: 'Erreur du serveur' });
+  }  
+
 }
 
 async function sendConfirmationEmail(req, res){
@@ -72,36 +83,33 @@ async function sendConfirmationEmail(req, res){
     text: `Voici votre code de vérification : ${verificationCode}`
   };
 
-  const existingUser = await new Promise((resolve, reject) => {
-    db.all('SELECT * FROM users WHERE email = ?', [userEmail], 
-      (err, rows) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(rows);
-    });
+  const existingUser = await User.findOne({
+    where: { email: userEmail }
   });
 
   // const existingUser = db.all('SELECT * FROM users WHERE email = ?', [email])
   const user = existingUser[0]
   
   if (user) {
-    transporter.sendMail(mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.log(error);
         res.status(500).send('Une erreur est survenue lors de l\'envoi de l\'e-mail');
       } else {
         console.log('E-mail envoyé : ' + info.response);
 
-        const existingRows = db.all('SELECT * FROM password_reset_codes WHERE email = ?', userEmail);
+        const existingRows = await PasswordResetCode.findAll({
+          where: { email: userEmail }
+        });
+        
         const existingRow = existingRows[0];
         
         if (existingRow) {
           // Si une ligne avec cet e-mail existe déjà, mettre à jour le code correspondant
-          db.prepare('UPDATE password_reset_codes SET code = ? WHERE email = ?').run(verificationCode, userEmail);
+          await PasswordResetCodes.update({ code: verificationCode }, { where: { email: userEmail }});
         } else {
           // Sinon, insérer une nouvelle ligne avec l'e-mail et le code
-          db.prepare('INSERT INTO password_reset_codes (email, code) VALUES (?, ?)').run(userEmail, verificationCode);
+          await PasswordResetCode.create({ email: userEmail, code: verificationCode });
         }   
 
         res.status(200).send({message: 'E-mail envoyé avec succès', status: Status.MAIL_SENDED_SUCCESSFULLY });

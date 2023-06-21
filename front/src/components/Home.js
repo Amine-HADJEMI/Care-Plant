@@ -67,7 +67,6 @@ const Home = () => {
         createdAt: new Date(),
         
       });
-      console.log("Document écrit avec ID: ", response.data.id);
       setTitle("");
       setDescription("");
       setImage(null);
@@ -85,6 +84,14 @@ const Home = () => {
         >
           <Entypo name="lock" size={24} color={colors.red} />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Settings")}
+          style={styles.settingsButton}
+        >
+          <Entypo name="cog" size={24} color={colors.blue} />
+        </TouchableOpacity>
+
       <Text style={styles.welcome}>Welcome {userData.name}</Text>
       
       <View style={styles.inputContainer}>

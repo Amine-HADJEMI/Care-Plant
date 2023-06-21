@@ -1,20 +1,20 @@
 const bcrypt = require("bcrypt");
 const Database = require("../models/database");
-const Status = require("../utils/status")
+const Status = require("../utils/status");
+const { User, Role, sequelize } = require("../models/database");
+const { Op } = require("sequelize");
+const { v4: uuidv4 } = require("uuid");
 
-const db = Database.db
+// const db = Database.db
+
+sequelize.sync().then(() => {
+  console.log("Models synchronized with database in userController");
+});
 
 async function getAllUsers(req, res) {
   try {
-    const rows = await new Promise((resolve, reject) => {
-      db.all('SELECT * FROM users', (err, rows) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(rows);
-      });
-    });
-    res.status(200).json(rows);
+    const users = await User.findAll();
+    res.status(200).json(users);
   } catch (err) {
     console.error(err);
     res.status(500).send(err);
@@ -23,93 +23,105 @@ async function getAllUsers(req, res) {
 
 async function createUser(req, res) {
   try {
-    const password = req.body.password;
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(password, saltRounds);
+    const { lastName, firstName, email, password } = req.body;
 
-    if (req.body.userName && req.body.email) {
-      const existingUsers = await new Promise((resolve, reject) => {
-        db.all(
-          'SELECT * FROM users WHERE userName = ? OR email = ?',
-          [req.body.userName, req.body.email], 
-          (err, rows) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(rows);
-        });
-      });
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = await User.findOne({
+      where: { email: email },
+    });
 
-      if (existingUsers.length > 0) {
-        res.status(200).send({ message: 'User already exists', status: Status.USER_ALREADY_EXISTS });
-      }
-      else {
-        const stmt = db.prepare(
-          'INSERT INTO users (userName, name, email, password) VALUES (?, ?, ?, ?)'
-        );
-        stmt.run(
-          req.body.userName,
-          req.body.name,
-          req.body.email.toLowerCase(),
-          hash
-        );
-        stmt.finalize();
-        res.status(201).send({ message:'User created successfully', status: Status.CREATE_USER});
-      }
-    } else {
-      res.status(200).send({ message:'Please complete the data', status: Status.INCOMPELETE_DATA });
+    if (existingUser) {
+      return res.status(400).json({ error: "Cet utilisateur existe déjà" });
     }
+
+    // Rechercher le rôle par défaut 'ROLE_USER' ou le créer s'il n'existe pas encore
+    let role = await Role.findOne({
+      where: { name: "ROLE_USER" },
+    });
+
+    if (!role) {
+      role = await Role.create({
+        name: "ROLE_USER",
+      });
+    }
+
+    // Vérifier le format du mot de passe avec une expression régulière
+    const passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        error:
+          "Le mot de passe doit contenir au moins 8 caractères, une lettre minuscule, une lettre majuscule, un chiffre et un caractère spécial",
+      });
+    }
+
+    // Créer l'utilisateur dans la base de données avec le rôle par défaut
+    const user = await User.create({
+      id: uuidv4(),
+      lastName,
+      firstName,
+      email,
+      password,
+      RoleId: 1,
+    });
+
+    res.status(201).send({
+      message: "User created successfully",
+      status: Status.CREATE_USER,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error creating user');
+    console.error("Erreur lors de la création de l'utilisateur :", error);
+    res
+      .status(500)
+      .json({ error: "Erreur lors de la création de l'utilisateur" });
   }
 }
 
+
 async function updateUser(req, res) {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,20}$/;
+
   const { name, email, password } = req.body;
   const { userName } = req.params;
-  db.run(
-    `UPDATE users SET name = ?, email = ?, password = ? WHERE userName = ?`,
-    [userName, name, email, password],
-    (err) => {
-      if (err) {
-        return res.status(500).json({ error: "Error updating user" });
-      }
-      res.json({ message: "User updated successfully" });
-    }
-  );
-};
-
-async function deleteUser(req, res) {  
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({ error: "Invalid password format" });
+  }
   try {
-    const existingUser = await new Promise((resolve, reject) => {
-      db.all(
-        'SELECT * FROM users WHERE userName = ?', 
-        req.params.userName, (err, rows) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(rows);
-      });
-    });
+    const user = await User.findOne({ where: { userName } });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.name = name;
+    user.email = email;
+    user.password = await bcrypt.hash(password, 10);
+    await user.save();
+    res.json({ message: "User updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error updating user" });
+  }
+}
+
+async function deleteUser(req, res) {
+  try {
+    const existingUser = await User.findOne({ where: { userName: req.body.userName }});
 
     if (existingUser.length === 0) {
-      return res.status(404).send(`The user with userName ${req.params.userName} does not exist`);
+      return res.status(404).send(`The user with userName ${req.body.userName} does not exist`);
     }
 
-    db.run(`DELETE FROM users WHERE userName = ?`, req.params.userName, function(err) {
-      if (err) {
-        return res.status(500).send(err);
+    await User.destroy({
+      where: {
+        userName: req.body.userName
       }
-      console.log('existingUser.length')
-
-      res.status(200).send(`User with userName ${req.params.userName} deleted`);
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error deleting user');
+      res.status(200).send({message: `User with userName ${req.body.userName} deleted`, status: Status.DELETE_USER});
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(err);
   }
-};
+}
 
 module.exports = {
   getAllUsers,

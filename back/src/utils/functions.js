@@ -1,5 +1,3 @@
-
-
 async function existingUser(email) {
   await new Promise((resolve, reject) => {
     db.all('SELECT * FROM users WHERE email = ?', [email], 
@@ -12,6 +10,6 @@ async function existingUser(email) {
   });
 } 
 
-module.exports = {
+export default {
   existingUser
 }
