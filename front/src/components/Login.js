@@ -29,8 +29,6 @@ export default function Login({ navigation }) {
     axios
       .post("/login", { email, password })
       .then((response) => {
-        navigation.navigate("Home");
-
         if (response.data.status === Status.INVALID_EMAIL_OR_PASSWORD) {
           setErrorMessage("invalid email or password");
           setNumFailedAttempts(numFailedAttempts + 1);
