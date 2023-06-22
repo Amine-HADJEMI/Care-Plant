@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import PropTypes from "prop-types";
+import { Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import Status from "../utils/status";
 import Port from "../utils/portServer";
 import { useDispatch } from "react-redux";
@@ -21,7 +15,7 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
-  const [numFailedAttempts, setNumFailedAttempts] = useState(0); // ajouter cette variable d'état pour stocker le nombre de tentatives de connexion infructueuses
+  const [numFailedAttempts, setNumFailedAttempts] = useState(0);
 
   axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
@@ -97,10 +91,14 @@ export default function Login({ navigation }) {
         style={styles.signUpBtn}
         onPress={() => navigation.navigate("Signup")}
       >
-        <Text style={styles.loginText}>Vous n'avez pas de compte?</Text>
+        <Text style={styles.loginText}>Vous n&apos;avez pas de compte?</Text>
       </TouchableOpacity>
 
       {errorMessage && <Text style={styles.errorStyle}>{errorMessage}</Text>}
     </View>
   );
 }
+
+Login.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};

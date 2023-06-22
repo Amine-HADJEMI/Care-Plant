@@ -1,6 +1,6 @@
+import React, { useEffect, useRef, useState } from 'react'; 
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, SafeAreaView, Button, Image } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
