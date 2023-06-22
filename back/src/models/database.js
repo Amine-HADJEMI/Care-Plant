@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
-const sequelize = new Sequelize("careplant", "root", "", {
+const sequelize = new Sequelize("careplant", "root", "123", {
   host: "localhost",
   dialect: "mysql",
 });

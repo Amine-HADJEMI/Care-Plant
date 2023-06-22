@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import PropTypes from 'prop-types';
 
 const ViewPrivacy = ({ navigation }) => {
   return (
@@ -12,8 +13,13 @@ const ViewPrivacy = ({ navigation }) => {
         Politique de confidentialité
       </Text>
     </View>
-    
   );
+};
+
+ViewPrivacy.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const styles = StyleSheet.create({
@@ -21,7 +27,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f2f2f2',
     height: 50,
     borderTopWidth: 1,
     borderTopColor: '#ddd',
@@ -43,6 +48,5 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 });
-
 
 export default ViewPrivacy;
