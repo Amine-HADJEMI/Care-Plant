@@ -12,7 +12,7 @@ import Port from "../utils/portServer";
 import { useDispatch } from "react-redux";
 import { connectUser } from "../store/store";
 import axios from "axios";
-
+import { setToken } from "../utils/tokenUtil";
 import styles from "../styles/loginStyle";
 
 export default function Login({ navigation }) {
@@ -30,26 +30,24 @@ export default function Login({ navigation }) {
       .post("/login", { email, password })
       .then((response) => {
         if (response.data.status === Status.INVALID_EMAIL_OR_PASSWORD) {
-          setErrorMessage("invalid email or password");
-          setNumFailedAttempts(numFailedAttempts + 1); // incrémente le nombre de tentatives infructueuses après une erreur de connexion
-          if (numFailedAttempts >= 4) {
-            // vérifie si l'utilisateur a atteint 5 tentatives infructueuses
-            setErrorMessage("Votre compte a été verrouillé"); // affiche un message d'erreur pour indiquer que le compte est verrouillé
-            // ici, vous pouvez également implémenter une fonctionnalité pour verrouiller le compte de l'utilisateur en modifiant les paramètres de son compte dans la base de données
-          }
+          setErrorMessage("Email ou mot de passe invalide");
+          setNumFailedAttempts(numFailedAttempts + 1);
+          // ...
         } else if (
           response.data.status === Status.SUCCESS_AUTHENTIFICATION_USER
         ) {
+          const { token, user } = response.data;
+          setToken(token); // Stocke le token dans le client
+
+          // Ajout de l'en-tête Authorization dans toutes les requêtes Axios
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
           dispatch(
-            connectUser({
-              firstName: response.data.user.firstName,
-              emailUser: response.data.user.email,
-            })
+            connectUser({ firstName: user.firstName, emailUser: user.email })
           );
           navigation.navigate("Home");
-
           setErrorMessage(null);
-          setNumFailedAttempts(0); // réinitialise le nombre de tentatives infructueuses après une connexion réussie
+          setNumFailedAttempts(0);
         }
         console.log("reponse", response.data);
       })

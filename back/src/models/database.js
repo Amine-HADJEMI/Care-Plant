@@ -28,6 +28,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  token: {
+    type: DataTypes.STRING, // ou DataTypes.TEXT si le token est long
+    allowNull: true,
+  },
 });
 
 const Role = sequelize.define("Role", {
