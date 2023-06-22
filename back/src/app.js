@@ -5,7 +5,7 @@ const loginRoutes = require("./routes/loginRoutes");
 const changePasswordRoutes = require("./routes/changePasswordRoutes");
 const postsRoutes = require("./routes/postsRoutes")
 const chatRoutes = require("./routes/chatRoutes")
-
+const ContactUsRoutes = require("./routes/contactUsRoutes")
 
 const cors = require("cors");
 
@@ -18,6 +18,7 @@ app.use("/", loginRoutes);
 app.use("/", changePasswordRoutes);
 app.use("/", postsRoutes);
 app.use("/", chatRoutes);
+app.use("/", ContactUsRoutes);
 
 
 

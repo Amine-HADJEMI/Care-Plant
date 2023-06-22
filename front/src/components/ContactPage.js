@@ -1,33 +1,63 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import axios from "axios";
+import Port from "../utils/portServer";
 
-const ContactPage = () => {
-  const handleSubmit = () => {
-    // Logique de soumission du formulaire de contact
-    // À compléter selon vos besoins
+// const ContactPage = () => {
+axios.defaults.baseURL = Port.LOCALHOST_WEB;
+export default class SignUp extends React.Component {
+
+  state = {
+    name: "",
+    email: "",
+    message: "",
   };
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Contactez-nous</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nom"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Adresse e-mail"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Message"
-        multiline
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Envoyer</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  onChangeText = (key, val) => {
+    this.setState({ [key]: val });
+  };
+
+  handleSubmit = () => {
+    console.log('state', this.state)
+    axios
+      .post("/contact-us", 
+        { name: this.state.name, 
+          email: this.state.email,  
+          message: this.state.message,  
+        })
+      .then((response) => {
+        console.log(responses);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+      });
+  }
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Contactez-nous</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nom"
+          onChangeText={(val) => this.onChangeText("name", val)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Adresse e-mail"
+          onChangeText={(val) => this.onChangeText("email", val)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Message"
+          multiline
+          onChangeText={(val) => this.onChangeText("message", val)}
+        />
+        <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
+          <Text style={styles.buttonText}>Envoyer</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -65,4 +95,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ContactPage;
+// export default ContactPage;

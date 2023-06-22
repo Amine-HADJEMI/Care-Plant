@@ -65,7 +65,7 @@ export default function Settings({ navigation }) {
   }
   
   const goToContactPage = () => {
-    navigation.navigate('Contact');
+    navigation.navigate('ContactPage');
   }
 
   return (
@@ -112,6 +112,7 @@ export default function Settings({ navigation }) {
         {error && <Text style={styles.errorStyle}>{error}</Text>}
       </View>
       <TouchableOpacity style={styles.chatButton} onPress={goToContactPage}>
+        <Text style={styles.loginText}>Nous Contactez</Text>
       </TouchableOpacity>
     </View>
   )
