@@ -31,7 +31,7 @@ async function createUser(req, res) {
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: "Cet utilisateur existe déjà" });
+      return res.status(201).json({  status: Status.USER_ALREADY_EXISTS, error: "Cet utilisateur existe déjà" });
     }
 
     // Rechercher le rôle par défaut 'ROLE_USER' ou le créer s'il n'existe pas encore
