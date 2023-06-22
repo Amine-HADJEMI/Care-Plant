@@ -62,7 +62,7 @@ async function createUser(req, res) {
       lastName,
       firstName,
       email,
-      password,
+      password: await bcrypt.hash(password, 10),
       RoleId: 1,
     });
 
