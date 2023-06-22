@@ -1,68 +1,64 @@
-const {Post, sequelize} = require('../models/database');
+const { Post, sequelize } = require("../models/database");
 
 sequelize.sync().then(() => {
-  console.log('Models synchronized with database in postsController');
+  console.log("Models synchronized with database in postsController");
 });
 
 const getPosts = async (req, res) => {
-  const posts = await Post.findAll();
-  const data = posts.map((post) => ({
-    id: post.id,
-    title: post.title,
-    description: post.description,
-    image: post.image,
-    userName: post.userName,
-    createdAt: new Date(post.createdAt),
-    carePlant: (post.carePlant === 0 ? false : true),
-  }));
-  res.send(data);  
-}
-
-const savePhoto = (req, res) => {
-  const { title, description, image, userName, createdAt, carePlant } = req.body;
-
-  const carePlantBool = carePlant ? 1 : 0; // 1 si vrai, 0 si faux
-
-  Post.create({
-    title: title,
-    description: description,
-    image: image,
-    userName: userName,
-    createdAt: createdAt,
-    carePlant: carePlantBool
-  })
-  .then((post) => {
-    console.log(`Publication enregistrée avec l'ID ${post.id}`);
-    res.send({ id: post.id });
-  })
-  .catch((err) => {
-    console.error(err);
-    res.status(500).send(`Erreur lors de l'enregistrement de la publication : ${err}`);
-  });
-  
-};
-
-const carePlant = async (req, res) => {
-  const postId  = req.body.id;
   try {
-    const post = await Post.findByPk(postId);
-  
-    if (!post) {
-      return res.status(404).send({ message: 'Publication non trouvée' });
-    }
-  
-    await post.update({ carePlant: true });
-  
-    res.send({ message: 'Publication mise à jour avec succès' });
+    const posts = await Post.findAll();
+    const data = posts.map((post) => ({
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      image: post.image,
+    }));
+    res.send(data);
   } catch (err) {
     console.error(err);
-    res.status(500).send('Erreur lors de la mise à jour de la publication');
+    res.status(500).send("Error retrieving posts");
   }
 };
 
-module.exports = { 
-  savePhoto,
-  getPosts,
-  carePlant
+const savePhoto = async (req, res) => {
+  const { title, description, image } = req.body;
+
+  try {
+    const post = await Post.create({
+      title: title,
+      description: description,
+      image: image,
+    });
+
+    console.log(`Post saved with ID: ${post.id}`);
+    res.send({ id: post.id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send(`Error saving post: ${err}`);
+  }
 };
 
+const carePlant = async (req, res) => {
+  const postId = req.body.id;
+
+  try {
+    const post = await Post.findByPk(postId);
+
+    if (!post) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+
+    await post.update({ carePlant: true });
+
+    res.send({ message: "Post updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating post");
+  }
+};
+
+module.exports = {
+  savePhoto,
+  getPosts,
+  carePlant,
+};
