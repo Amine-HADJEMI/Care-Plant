@@ -28,6 +28,10 @@ const User = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  token: {
+    type: DataTypes.STRING, // ou DataTypes.TEXT si le token est long
+    allowNull: true,
+  },
 });
 
 const Role = sequelize.define("Role", {
@@ -99,8 +103,18 @@ User.hasMany(PasswordEmailResetCode); // Relation "User" avec "PasswordEmailRese
 // Créer les tables dans la base de données
 sequelize
   .sync()
-  .then(() => {
+  .then(async () => {
     console.log("Tables créées avec succès.");
+    // Vérifier si les rôles existent déjà avant de les créer
+    const roles = ["ROLE_USER", "ROLE_ADMIN"];
+    for (const roleName of roles) {
+      await Role.findOrCreate({
+        where: { name: roleName },
+        defaults: { name: roleName },
+      });
+    }
+
+    console.log("Rôles créés avec succès.");
   })
   .catch((error) => {
     console.error("Erreur lors de la création des tables :", error);

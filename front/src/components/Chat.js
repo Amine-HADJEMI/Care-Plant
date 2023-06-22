@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { SafeAreaView, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  SafeAreaView,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import axios from "axios";
 // import io from 'socket.io-client';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Port from '../utils/portServer';
-import { useSelector } from 'react-redux';
-import styles from '../styles/chatStyle';
-
+import Icon from "react-native-vector-icons/FontAwesome";
+import Port from "../utils/portServer";
+import { useSelector } from "react-redux";
+import styles from "../styles/chatStyle";
 
 axios.defaults.baseURL = Port.LOCALHOST_WEB;
 
@@ -16,11 +22,12 @@ export default function ChatScreen() {
   const userData = useSelector((state) => state.user);
 
   const [messages, setMessages] = useState([]);
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const flatListRef = useRef();
 
   useEffect(() => {
-    axios.get(`/messages`)
+    axios
+      .get(`/messages`)
       .then((response) => {
         setMessages(response.data);
         scrollToBottom();
@@ -49,13 +56,13 @@ export default function ChatScreen() {
     if (inputText) {
       const message = {
         text: inputText,
-        user: userData.name,
-        createdAt: new Date().toISOString(),
+        user: userData.firstName,
       };
-      axios.post(`/add-message`, message)
+      axios
+        .post(`/add-message`, message)
         .then((response) => {
           setMessages((prevMessages) => [...prevMessages, message]);
-          setInputText('');
+          setInputText("");
           scrollToBottom();
         })
         .catch((error) => {
@@ -67,30 +74,28 @@ export default function ChatScreen() {
   };
 
   const renderItem = ({ item }) => {
-    const createdAt = new Date(item.createdAt).toLocaleDateString('fr-FR', {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
+    const createdAt = new Date(item.createdAt).toLocaleDateString("fr-FR", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
     });
-  
+
     return (
       <View style={styles.messageContainer}>
-        <Text style={styles.username}>
+        <Text style={styles.firstName}>
           <Icon name="circle" size={15} color="#0084ff" /> {item.user}
         </Text>
         <Text style={styles.text}>{item.text}</Text>
-        <Text style={styles.createdAt}>{createdAt}</Text>
       </View>
     );
   };
-  
 
   const scrollToBottom = () => {
     flatListRef.current.scrollToEnd({ animated: true });
   };
 
   return (
-    <View style={{ flex: 1, height: '100%', flexDirection: 'column' }}>
+    <View style={{ flex: 1, height: "100%", flexDirection: "column" }}>
       <View style={{ flex: 1 }}>
         <SafeAreaView style={styles.container}>
           <View style={styles.chatContainer}>

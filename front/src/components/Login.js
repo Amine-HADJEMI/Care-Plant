@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import Status from "../utils/status";
 import Port from "../utils/portServer";
 import { useDispatch } from "react-redux";
 import { connectUser } from "../store/store";
 import axios from "axios";
-
+import { setToken } from "../utils/tokenUtil";
 import styles from "../styles/loginStyle";
 
 export default function Login({ navigation }) {
@@ -30,24 +24,22 @@ export default function Login({ navigation }) {
       .post("/login", { email, password })
       .then((response) => {
         if (response.data.status === Status.INVALID_EMAIL_OR_PASSWORD) {
-          setErrorMessage("invalid email or password");
+          setErrorMessage("Email ou mot de passe invalide");
           setNumFailedAttempts(numFailedAttempts + 1);
-          if (numFailedAttempts >= 4) {
-            setErrorMessage("Votre compte a été verrouillé");
-          }
+          // ...
         } else if (
           response.data.status === Status.SUCCESS_AUTHENTIFICATION_USER
         ) {
+          const { token, user } = response.data;
+          setToken(token); // Stocke le token dans le client
+
+          // Ajout de l'en-tête Authorization dans toutes les requêtes Axios
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
           dispatch(
-            connectUser({
-              userName: response.data.user.userName,
-              name: response.data.user.name,
-              emailUser: response.data.user.email,
-            })
+            connectUser({ firstName: user.firstName, emailUser: user.email })
           );
-
           navigation.navigate("Home");
-
           setErrorMessage(null);
           setNumFailedAttempts(0);
         }
@@ -74,7 +66,7 @@ export default function Login({ navigation }) {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Mot de passe top secret"
+          placeholder="Mot de passe"
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}

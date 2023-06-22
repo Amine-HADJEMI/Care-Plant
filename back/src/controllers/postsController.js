@@ -12,7 +12,6 @@ const getPosts = async (req, res) => {
     description: post.description,
     image: post.image,
     userName: post.userName,
-    createdAt: new Date(post.createdAt),
     carePlant: (post.carePlant === 0 ? false : true),
   }));
   res.send(data);  
