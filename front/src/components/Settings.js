@@ -63,6 +63,10 @@ export default function Settings({ navigation }) {
         console.log(error)
       })
   }
+  
+  const goToContactPage = () => {
+    navigation.navigate('Contact');
+  }
 
   return (
     <View style={styles.container} >
@@ -107,6 +111,8 @@ export default function Settings({ navigation }) {
 
         {error && <Text style={styles.errorStyle}>{error}</Text>}
       </View>
+      <TouchableOpacity style={styles.chatButton} onPress={goToContactPage}>
+      </TouchableOpacity>
     </View>
   )
 }

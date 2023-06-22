@@ -24,6 +24,7 @@
     "expo-sharing": "^11.0.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
+    "material-icons": "^1.13.8",
     "native-base": "^3.4.25",
     "openssl": "^2.0.0",
     "prop-types": "^15.8.1",

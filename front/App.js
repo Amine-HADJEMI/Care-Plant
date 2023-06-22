@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { StyleSheet } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -15,8 +14,8 @@ import ChatScreen from './src/components/Chat'
 import Privacy from './src/components/Privacy'
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
-import Settings from './src/components/Settings'
-
+import Settings from './src/components/Settings';
+import ContactPage from './src/components/ContactPage';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -65,7 +64,10 @@ export default function App() {
               name="Settings"
               component={Settings}
             />
-            
+             <Stack.Screen
+              name="ContactPage"
+              component={ContactPage}
+            />
           </Stack.Navigator>
         </NavigationContainer>
     </Provider>
