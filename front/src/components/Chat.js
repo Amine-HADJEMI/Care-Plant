@@ -83,7 +83,7 @@ export default function ChatScreen() {
     return (
       <View style={styles.messageContainer}>
         <Text style={styles.firstName}>
-          <Icon name="circle" size={15} color="#0084ff" /> {item.user}
+          <Icon name="circle" size={15} color="#0084ff" /> {userData.firstName}
         </Text>
         <Text style={styles.text}>{item.text}</Text>
       </View>
