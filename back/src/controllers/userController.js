@@ -68,21 +68,6 @@ async function createUser(req, res) {
         status: Status.CREATE_USER,
       });
     }
-
-    // Créer l'utilisateur dans la base de données avec le rôle par défaut
-    const user = await User.create({
-      id: uuidv4(),
-      lastName,
-      firstName,
-      email,
-      password: await bcrypt.hash(password, 10),
-      RoleId: 1,
-    });
-
-    res.status(201).send({
-      message: "User created successfully",
-      status: Status.CREATE_USER,
-    });
   } catch (error) {
     console.error("Erreur lors de la création de l'utilisateur :", error);
     res

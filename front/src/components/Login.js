@@ -43,10 +43,10 @@ export default function Login({ navigation }) {
           setErrorMessage(null);
           setNumFailedAttempts(0);
         }
-        console.log("reponse", response.data);
+        console.log("reponse", response);
       })
       .catch((error) => {
-        console.log(error.response.data.message);
+        console.log(error.response);
       });
   };
 

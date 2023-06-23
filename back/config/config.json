@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "root",
+    "password": "nouveau_mot_de_passe",
+    "database": "careplant",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
