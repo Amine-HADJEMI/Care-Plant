@@ -3,8 +3,9 @@ const app = express();
 const userRoutes = require("./routes/userRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 const changePasswordRoutes = require("./routes/changePasswordRoutes");
-const postsRoutes = require("./routes/postsRoutes")
-const chatRoutes = require("./routes/chatRoutes")
+const postsRoutes = require("./routes/postsRoutes");
+const chatRoutes = require("./routes/chatRoutes");
+
 
 
 const cors = require("cors");

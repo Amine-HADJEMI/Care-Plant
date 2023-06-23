@@ -11,6 +11,17 @@ sequelize.sync().then(() => {
   console.log("Models synchronized with database in userController");
 });
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     description: Récupère tous les utilisateurs
+ *     responses:
+ *       200:
+ *         description: Succès
+ *       500:
+ *         description: Erreur du serveur
+ */
 async function getAllUsers(req, res) {
   try {
     const users = await User.findAll();
