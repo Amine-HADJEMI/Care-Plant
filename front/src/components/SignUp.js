@@ -68,6 +68,9 @@ export default class SignUp extends React.Component {
           this.props.navigation.navigate("Home");
         }
       })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   render() {

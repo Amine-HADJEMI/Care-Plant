@@ -1,44 +1,44 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {userName: '' , name: '', emailUser: '' },
+  initialState: { lastName: "", firstName: "", emailUser: "" },
   reducers: {
     connectUser: (state, action) => {
-      state.userName = action.payload.userName;
-      state.name = action.payload.name;
+      state.lastName = action.payload.lastName;
+      state.firstName = action.payload.firstName;
       state.emailUser = action.payload.emailUser;
-    }
-  }
+    },
+  },
 });
 
 const forgetPasswordSlice = createSlice({
   name: "forgetPassword",
-  initialState: { emailUser: '' },
+  initialState: { emailUser: "" },
   reducers: {
     forgetPasswordUserEmail: (state, action) => {
       state.emailUser = action.payload.emailUser;
-    }
-  }
+    },
+  },
 });
 
 export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
-    forgetPassword: forgetPasswordSlice.reducer
-  }
-})
+    forgetPassword: forgetPasswordSlice.reducer,
+  },
+});
 
 export const connectUser = (payload) => {
   return {
     type: "user/connectUser",
-    payload
-  }
-}
+    payload,
+  };
+};
 
 export const forgetPasswordUserEmail = (payload) => {
   return {
     type: "forgetPassword/forgetPasswordUserEmail",
-    payload
-  }
-} 
+    payload,
+  };
+};
