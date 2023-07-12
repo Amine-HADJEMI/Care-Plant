@@ -104,7 +104,7 @@ async function loginUser(req, res) {
     }
 
     // Génération du token JWT
-    const token = jwt.sign({ userId: user.id }, "zabi");
+    const token = jwt.sign({ userId: user.id }, "motdepass");
     await User.update({ token }, { where: { id: user.id } });
     console.log(token);
     res.json({
